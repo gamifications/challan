@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extracss %}
+<link href="{% static 'select2/select2.min.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action=".">{% csrf_token %}
+          <div class="row mb-3">
+            <label for="acno" class="col-sm-2 col-form-label">Account Number:</label>
+            <div class="col-sm-10">
+              <div class="row"><div class="col-sm-10">
+                <select id="id_interests" name="acno" class="form-control">
+                  <option value="AL">Alabama</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-success btn-sm" type="button">+</button>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="name" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="telephone" class="col-sm-2 col-form-label">Telephone</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="telephone" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+            <div class="col-sm-10">
+              <input class="form-control" id="amount" name="amount">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Generate Challan</button>
+        </form>
+
+      </div>
+    </div>
+    <hr>
+    <table class="table table-bordered">
+      {% for file in files %}
+      <tr>
+        <td>{{file.id}}</td>
+        <td><a href="{{file.challanfile.url}}">{{file.challanfile.url}}</a></td>
+        <td>{{file.uploading_date}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extrajs %}
+
+
+<script src="{% static 'select2/select2.min.js' %}"></script>
+<script>
+  $('#id_interests').select2({ placeholder: 'Select interested Subjects' });
+</script>
+
+{% endblock %}
