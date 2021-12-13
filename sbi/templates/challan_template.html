@@ -25,6 +25,7 @@
     font-size: 8px;
   }
 
+
   .noborder {
     border: none !important;
     padding: 20px;
@@ -37,8 +38,9 @@
       <td style="border:none;border-right: 1px dashed black; padding:20px">
         <div class="bordered">
           <h2>SBI <small>DEPOSIT/PAY IN SLIP</small></h2>
-          <p>State Bank of India <small>Date: / / 2021</small></p>
-          <p>Branch:</p>
+          State Bank of India <small>Date: / / 2021</small><br>
+          Branch:<br>
+          <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
           <table class="blank">
             <tr>
               <td></td>
@@ -63,8 +65,8 @@
           <p>Tel No _________________________________________</p>
           Amount <table class="blank">
             <tr>
-              <td style="min-width:200px">{{file.amount}}</td>
-              <td></td>
+              <td style="min-width:160px">{{file.amount}}</td>
+              <td>0</td>
             </tr>
           </table>
           <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span></p>
@@ -97,6 +99,14 @@
               <td></td>
               <td></td>
             </tr>
+            <tr>
+              <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </table>
         </div>
       </td>
@@ -105,7 +115,9 @@
         <table>
           <tr>
             <td colspan="4">
-              <p>PAN No. </p>
+              <div style="padding: 5px;">
+                  PAN No.
+
               <table class="blank">
                 <tr>
                   <td></td>
@@ -120,15 +132,17 @@
                   <td></td>
                 </tr>
               </table>
-              <p>OR</p>
-              <p>Form 60
+              OR
+              Form 60
               <table class="blank">
                 <tr>
                   <td></td>
                 </tr>
               </table>
-              </p>
-              <small>For Cash Deposit of rs 50,000/- & Above</small>
+              <span style="font-size: 6px;">For Cash Deposit of rs 50,000/- & Above</span>
+              
+            
+          </div>
             </td>
           </tr>
           <tr>
@@ -195,13 +209,22 @@
             <td></td>
             <td></td>
           </tr>
-        </table>
+          <tr>
+            <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
+        
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          </table>
       </td>
       <td class="noborder">
         <!-- coloumn 2-->
         <h2>SBI <small>DEPOSIT/PAY IN SLIP</small></h2>
-        <p>State Bank of India <small>Date: / / 2021</small></p>
-        <p>Branch:</p>
+        State Bank of India <small>Date: / / 2021</small><br>
+        Branch:<br>
+        <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
+        
         <table class="blank">
           <tr>
             <td></td>
@@ -256,6 +279,16 @@
             <td></td>
             <td></td>
           </tr>
+          <tr>
+            <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
+        
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          
         </table>
 
         <p>Name of Depositor         Aadhaar No.     Signature of Depositor</p>

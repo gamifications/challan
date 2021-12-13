@@ -3,63 +3,66 @@
 
 {% block extracss %}
 <link href="{% static 'select2/select2.min.css' %}" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="{% static 'handsontable/handsontable.full.min.css' %}">
 {% endblock %}
-{% block content %}
-<div class="row">
-  <div class="col-md-6 col-sm-12">
-    <div class="card">
-      <div class="card-body">
-        <form method="post" action=".">{% csrf_token %}
-          <div class="row mb-3">
-            <label for="acno" class="col-sm-2 col-form-label">Account Number:</label>
-            <div class="col-sm-10">
-              <div class="row"><div class="col-sm-11">
-                <select id="id_interests" name="acno" class="form-control">
-                  <option value="AL">Alabama</option>
-                  <option value="WY">Wyoming</option>
-                </select>
-              </div>
-              <div class="col-sm-1">
-                <button class="btn btn-success btn-sm" type="button"  data-bs-toggle="modal" data-bs-target="#exampleModal">+</button>
-              </div>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="name" class="col-sm-2 col-form-label">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="name" name="name">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="telephone" class="col-sm-2 col-form-label">Telephone</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="telephone" name="telephone">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label for="amount" class="col-sm-2 col-form-label">Amount</label>
-            <div class="col-sm-10">
-              <input class="form-control" id="amount" name="amount">
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">Generate Challan</button>
-        </form>
 
+{% block content %}
+<div class="card">
+  <div class="card-header"><strong>New Challan</strong></div>
+  <div class="card-body">
+    <form method="post" action=".">{% csrf_token %}
+      <div class="row mb-3">
+        <label for="acno" class="col-sm-2 col-form-label">Name:</label>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-10 col-sm-11">
+              <select id="sel_account" name="acno" class="form-control" required>
+                <option value=''>--Select--</option>
+              </select>
+            </div>
+            <div class="col-2 col-sm-1">
+              <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">+</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <hr>
-    <table class="table table-bordered">
-      {% for file in files %}
-      <tr>
-        <td>{{file.id}}</td>
-        <td><a href="{{file.challanfile.url}}">{{file.challanfile.url}}</a></td>
-        <td>{{file.uploading_date}}</td>
-      </tr>
-      {% endfor %}
-    </table>
+      <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">A/C No.</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" disabled id="txt_acno">
+        </div>
+      </div>
+      <!-- <div class="row mb-3">
+        <label for="txt_telephone" class="col-sm-2 col-form-label">Telephone</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" disabled id="txt_telephone">
+        </div>
+      </div> -->
+      <div id="amount_table"></div><br>
+      <div class="row mb-3">
+        <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+        <div class="col-sm-6">
+          <input class="form-control" id="txtamount" name="amount" readonly>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Generate Challan</button>
+    </form>
   </div>
 </div>
+<hr>
+<table class="table table-bordered">
+  <tr>
+    <th colspan="3">Challans(Latest 5)</th>
+  </tr>
+  {% for file in files %}
+  <tr>
+    <td>{{file.id}}</td>
+    <td><a href="{{file.challanfile.url}}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
+    <td>{{file.uploading_date}}</td>
+  </tr>
+  {% endfor %}
+</table>
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -70,20 +73,45 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Name:</label>
-            <input type="text" class="form-control" id="recipient-name">
+
+        <form id="frm_addaccount">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name">
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">A/C number:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">A/C number:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no"></textarea>
+            </div>
           </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="branch">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Tel No.:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">PAN:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="pan">
+            </div>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save A/c</button>
+        <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
       </div>
     </div>
   </div>
@@ -92,11 +120,95 @@
 
 
 {% block extrajs %}
-
-
 <script src="{% static 'select2/select2.min.js' %}"></script>
-<script>
-  $('#id_interests').select2({ placeholder: 'Select interested Subjects' });
+<script src="{% static 'handsontable/handsontable.full.min.js' %}"></script>
+<!-- <script src="{% static 'handsontable/hyperformula.full.min.js' %}"></script> -->
+<script type="text/javascript">
+  var container = document.getElementById('amount_table');
+  // var save = document.getElementById('btn_save');
+  const data = [[false, "2000 x", "", "", ""], [false, "500 x", "", "", ""], [false, "200 x", "", "", ""],
+  [false, "100 x", "", "", ""], [false, "50 x", "", "", ""], [false, "20 x", "", "", ""], [false, "10 x", "", "", ""],
+  [false, "5 x", "", "", ""], [false, "coins", "", "", ""],];
+  // const hyperformulaInstance = HyperFormula.buildEmpty();
+  var amount_table = new Handsontable(container, {
+    // columns: [ {}, {}, {}],
+    columns: [
+      { data: 1, type: "text" },
+      { data: 2, type: "numeric" },
+      { data: 3, readOnly: true }, { data: 4, readOnly: true },
+    ],
+    colWidths: [100, 40, 100, 40],
+    data,
+    // formulas: {
+    //   engine: hyperformulaInstance,
+    //   sheetName: 'Sheet1'
+    // },
+    rowHeaders: true,
+    colHeaders: [
+      'Notes',
+      'No.',
+      'rs',
+      'P',
+    ],
+    licenseKey: 'non-commercial-and-evaluation',
+    afterChange(changes, source) {
+      let amts = this.getDataAtCol(1);
+      let total = 0;
+      if (amts[0]) total+=amts[0] * 2000;
+      if (amts[1]) total+=amts[1] * 500;
+      if (amts[2]) total+=amts[2] * 200;
+      if (amts[3]) total+=amts[3] * 100;
+      if (amts[4]) total+=amts[4] * 50;
+      if (amts[5]) total+=amts[5] * 20;
+      if (amts[6]) total+=amts[6] * 10;
+      if (amts[7]) total+=amts[7] * 5;
+      if (amts[8]) total+=amts[8];
+      $('#txtamount').val(total);
+      // console.log(total);
+    },
+  });
+
+
+  let ac_data = {{ accounts| safe}};
+  function setTextboxes(data) {
+    $("#txt_acno").val(data['account']);
+    // $("#txt_telephone").val(data['account']);
+
+  }
+
+  $('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
+  $('#sel_account').on('select2:select', function (e) {
+
+    setTextboxes(e.params.data);
+  });
+
+
+
+  $("#btn_add_account").click(function (e) {
+    e.preventDefault();
+    let addperiod = $('#exampleModal');
+    let datas = $('#frm_addaccount').serializeArray();
+    // $('#frm_addperiod :input').attr('disabled', true);    
+    $.ajax({
+      type: "POST",
+      url: "{% url 'account' %}",
+      data: datas
+    }).done(function (resp) {
+      // $('#frm_addevent :input').each(function(){this.disabled = false;});
+      if (resp['status'] == 'success') {
+        addperiod.modal('hide');
+        let newdata = resp['data'];
+        ac_data.push(newdata);
+        setTextboxes(newdata);
+        $('#sel_account').select2({ data: ac_data });
+        $("#sel_account").val(newdata['id']).trigger('change');
+        $("#frm_addaccount").trigger("reset");
+      } else {
+        addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
 </script>
 
 {% endblock %}

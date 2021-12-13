@@ -1,77 +1,65 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
-    <meta name="author" content="suhail vs">
-    
-    <meta name="domain" content="stackschools.com"/>
-    <meta name="title" content="{% block metatitle %}SBI Challan{% endblock %}" />
 
-    <meta name="description" content="{% block metadescription %}{% endblock %}"/>
-    <meta name="url" content="{% block metaurl %}https://stackschools.com/{% endblock %}" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="suhail vs">
 
-    <title>{% block title %}{% endblock %} - Stack Schools</title>
-    <link rel="icon" href="{% static 'img/favicon.png' %}">
-    
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap.css' %}">
-    <!-- Custom styles for this template -->  
+  <meta name="domain" content="gec.stackschools.com" />
+  <meta name="title" content="{% block metatitle %}SBI Challan{% endblock %}" />
 
-    {% block extracss %}
-    {% endblock %}
-  </head>
+  <meta name="description" content="{% block metadescription %}{% endblock %}" />
+  <meta name="url" content="{% block metaurl %}https://gec.stackschools.com/{% endblock %}" />
 
-  <body>
-    
-      <header class="p-3 mb-3 border-bottom">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none" href="{% url 'home' %}">
-                <img src="{% static 'img/stackschools.svg' %}" width="30" height="30" class="d-inline-block align-top mr-2" alt="">
-            </a>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a class="nav-link px-2 link-dark" href="/docsteacher/">Documentation</a> </li>
-              
-            </ul>
-    
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input type="search" class="form-control" placeholder="Search schools..." aria-label="Search">
-            </form>
-    
-            <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-outline-primary me-2">Login</button>
-                <!-- <button type="button" class="btn btn-primary">Sign-up</button> -->
-            </div>
-          </div>
-        </div>
-      </header>
+  <title>{% block title %}{% endblock %}GEC Stack Schools</title>
+  <link rel="icon" href="{% static 'img/favicon.png' %}">
 
-    <div class="container mt-3">
-    {% block content %}
-    {% endblock %}
-     
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap.css' %}">
+  <!-- Custom styles for this template -->
+  <style>
+    body {
+      background-image: linear-gradient(180deg, #eee, #fff 100px, #fff);
+    }
 
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-        <p class="col-md-4 mb-0 text-muted">© 2021 StackSchools</p>
-        <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <img src="{% static 'img/stackschools.svg' %}" width="30" height="30" class="d-inline-block align-top mr-2" alt="">
+    .container {
+      max-width: 700px;
+    }
+  </style>
+  {% block extracss %}
+  {% endblock %}
+</head>
+
+<body>
+  {% block body %}
+  <div class="container py-3">
+    <header>
+      <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+          <img src="{% static 'sbi.svg' %}" style="height:30px">
+          <span class="fs-4" style="margin-left: 10px;">SBI Challan</span>
         </a>
-    
-        <ul class="nav col-md-4 justify-content-end">
-          <li class="nav-item"><a class="nav-link px-2 text-muted" href="/docsteacher/">Documentation</a> </li>
-        </ul>
-      </footer>
-    </div>
 
+        <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
 
-    <!-- JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+          <a class="py-2 text-dark text-decoration-none" style="padding-right: 20px;">Hi {{ user.username }}!</a>
+          <a class="btn btn-warning" href="{% url 'logout' %}">Logout</a>
+        </nav>
+      </div>
+
+    </header>
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
     <script src="{% static 'jquery/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'bootstrap5/bootstrap.bundle.min.js' %}"></script>
     {% block extrajs %}
     {% endblock %}
-  </body>
+    {% endblock %}
+</body>
+
 </html>
