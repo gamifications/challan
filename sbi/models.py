@@ -17,3 +17,6 @@ class ChallanFile(models.Model):
 
     def __str__(self) -> str:
         return f'{self.uploading_date}'
+    
+    def get_denominations(self):
+        return self.cash_deposit.split(',')

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.files import File
 from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from weasyprint import HTML
 import inflect
@@ -17,24 +18,28 @@ from .forms import AccountForm
 @login_required
 def home(request):
     if request.method == 'POST':
-        print(request.POST['acno'], request.POST['amount'])
+        print(request.POST)
         cfile = ChallanFile.objects.create(
             amount=request.POST['amount'],
-            account_id = request.POST['acno']
+            account_id = request.POST['acno'],
+            cash_deposit= request.POST['denominations'],
         )
         
         amount_to_words = inflect.engine()
         context = {
             'file': cfile,
-            'amount_in_words': amount_to_words.number_to_words(cfile.amount)
+            'date': timezone.now(),
+            'amount_in_words': amount_to_words.number_to_words(cfile.amount),
+            'url': request.build_absolute_uri()[:-1] # strip last /
         }
-
+        
         html = HTML(string=render_to_string('challan_template.html', context))
         html.write_pdf(f'{settings.MEDIA_ROOT}/output/challan.pdf')
 
         cfile.challanfile.save(f'{cfile.id}.pdf', File(open(f'{settings.MEDIA_ROOT}/output/challan.pdf','rb')))
         return redirect('/')
-    
+
+
     context = {
         'files':ChallanFile.objects.order_by('-uploading_date')[:5],
         'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in Account.objects.order_by('name')],

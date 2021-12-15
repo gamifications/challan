@@ -1,3 +1,4 @@
+{% load static %}
 <html>
 
 <head>
@@ -37,8 +38,12 @@
     <tr>
       <td style="border:none;border-right: 1px dashed black; padding:20px">
         <div class="bordered">
-          <h2>SBI <small>DEPOSIT/PAY IN SLIP</small></h2>
-          State Bank of India <small>Date: / / 2021</small><br>
+          <div style="font-weight: bold;">
+            <img src="{{url}}{% static 'sbi.svg' %}" style="height:16px"> 
+            <span style="font-size: 20px;">SBI </span>
+            <span style="font-size: 12px;">DEPOSIT/PAY IN SLIP</span>
+          </div>
+          <strong>State Bank of India</strong> <span style="float: right;">Date: {{date.day}}/{{date.month}}/{{date.year}}</span><br>
           Branch:<br>
           <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
           <table class="blank">
@@ -69,7 +74,8 @@
               <td>0</td>
             </tr>
           </table>
-          <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span></p>
+          <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span>
+          </p>
           <table class="blank">
             <tr>
               <td colspan="6" style="background-color: black;color: white;">
@@ -100,7 +106,9 @@
               <td></td>
             </tr>
             <tr>
-              <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
+              <td style="border-bottom-style: hidden; border-left-style: hidden;">
+                <div style="text-align: right;">Total</div>
+              </td>
               <td></td>
               <td></td>
               <td></td>
@@ -116,33 +124,33 @@
           <tr>
             <td colspan="4">
               <div style="padding: 5px;">
-                  PAN No.
+                PAN No.
 
-              <table class="blank">
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </table>
-              OR
-              Form 60
-              <table class="blank">
-                <tr>
-                  <td></td>
-                </tr>
-              </table>
-              <span style="font-size: 6px;">For Cash Deposit of rs 50,000/- & Above</span>
-              
-            
-          </div>
+                <table class="blank">
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </table>
+                OR
+                Form 60
+                <table class="blank">
+                  <tr>
+                    <td></td>
+                  </tr>
+                </table>
+                <span style="font-size: 6px;">For Cash Deposit of rs 50,000/- & Above</span>
+
+
+              </div>
             </td>
           </tr>
           <tr>
@@ -210,21 +218,28 @@
             <td></td>
           </tr>
           <tr>
-            <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
-        
+            <td style="border-bottom-style: hidden; border-left-style: hidden;">
+              <div style="text-align: right;">Total</div>
+            </td>
+
             <td></td>
             <td></td>
             <td></td>
           </tr>
-          </table>
+        </table>
       </td>
       <td class="noborder">
-        <!-- coloumn 2-->
-        <h2>SBI <small>DEPOSIT/PAY IN SLIP</small></h2>
+        <!-- coloumn 3-->
+        <div style="font-weight: bold;">
+          <img src="{{url}}{% static 'sbi.svg' %}" style="height:16px"> 
+          <span style="font-size: 20px;">SBI </span>
+          <span style="font-size: 12px;">DEPOSIT/PAY IN SLIP</span>
+        </div>
+
         State Bank of India <small>Date: / / 2021</small><br>
         Branch:<br>
         <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
-        
+
         <table class="blank">
           <tr>
             <td></td>
@@ -280,21 +295,26 @@
             <td></td>
           </tr>
           <tr>
-            <td style="border-bottom-style: hidden; border-left-style: hidden;"><div style="text-align: right;">Total</div></td>
-        
+            <td style="border-bottom-style: hidden; border-left-style: hidden;">
+              <div style="text-align: right;">Total</div>
+            </td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
           </tr>
-          
         </table>
-
-        <p>Name of Depositor         Aadhaar No.     Signature of Depositor</p>
+        <p>Name of Depositor Aadhaar No. Signature of Depositor</p>
       </td>
     </tr>
   </table>
+
+
+
+
+  <p> TEST</p>
+  {{file.get_denominations}}
 </body>
 
 </html>
