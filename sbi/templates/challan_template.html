@@ -44,26 +44,13 @@
             <span style="font-size: 12px;">DEPOSIT/PAY IN SLIP</span>
           </div>
           <strong>State Bank of India</strong> <span style="float: right;">Date: {{date.day}}/{{date.month}}/{{date.year}}</span><br>
-          Branch:<br>
+          Branch:{{file.account.branch}}<br>
           <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
-          <table class="blank">
+          <table>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              {% for n in file.account.ac_no %}
+              <td>{{n}}</td>
+              {% endfor %}
             </tr>
           </table>
           <p>Name ___________________________________________</p>
@@ -237,35 +224,26 @@
         </div>
 
         <strong>State Bank of India</strong> <span style="float: right;">Date <table style="display:inline-table"><tr><td>{{date.day}}</td><td>{{date.month}}</td><td>{{date.year}}</td></tr></table></span><br>
-        <strong>Branch:</strong><br>
+        <strong>Branch:</strong>{{file.account.branch}}<br>
 
         <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
-
-        <table class="blank">
+        <table>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
-        <p>Name ___________________________________________</p>
-        <p>Tel No _________________________________________</p>
+            {% for n in file.account.ac_no %}
+              <td>{{n}}</td>
+              {% endfor %}
+            </tr>
+          </table>
+        
+          <p>Name <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{file.account.name}}</span>
+          </p>
+          <p>Tel No <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{file.account.telephone}}</span>
+          </p>
+          
         <p>Email ID _______________________________________</p>
-        <p>Rupees in Words ___________________________________</p>
-
+        <!-- <p>Rupees in Words ___________________________________</p> -->
+        <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span>
+        </p>
         <table class="blank">
           <tr>
             <td colspan="6" style="background-color: black;color: white;">
@@ -312,10 +290,6 @@
   </table>
 
 
-
-
-  <p> TEST</p>
-  {{file.get_denominations}}
 </body>
 
 </html>
