@@ -23,13 +23,19 @@
   }
 
   body {
-    font-size: 8px;
+    font-size: 12px;
   }
 
 
   .noborder {
     border: none !important;
     padding: 20px;
+  }
+  .center-table {
+    min-width: 300px
+  }
+  .center-table td {
+    text-align: center;
   }
 </style>
 
@@ -45,24 +51,25 @@
           </div>
           <strong>State Bank of India</strong> <span style="float: right;">Date: {{date.day}}/{{date.month}}/{{date.year}}</span><br>
           Branch:{{file.account.branch}}<br>
-          <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
+          <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
           <table>
             <tr>
               {% for n in file.account.ac_no %}
-              <td>{{n}}</td>
+              <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
-          <p>Name ___________________________________________</p>
-          <p>Tel No _________________________________________</p>
+          <p>Name <span style="border-bottom: 1px solid #000;">{{file.account.name}}</span>
+          </p>
+          <p>Tel No <span style="border-bottom: 1px solid #000;">{{file.account.telephone}}</span>
+          </p>
           Amount <table class="blank">
             <tr>
-              <td style="min-width:160px">{{file.amount}}</td>
-              <td>0</td>
+              <td style="min-width:160px; text-align: right;">{{file.amount}}</td>
+              <td>00</td>
             </tr>
           </table>
-          <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span>
-          </p>
+          <p>Rupees in Words: {{amount_in_words|safe}}</p>
           <table class="blank">
             <tr>
               <td colspan="6" style="background-color: black;color: white;">
@@ -107,9 +114,9 @@
       </td>
       <td class="noborder">
         <!-- coloumn 2-->
-        <table>
+        <table class="center-table">
           <tr>
-            <td colspan="4">
+            <td colspan="4" style="text-align: left;">
               <div style="padding: 5px;">
                 PAN No.
 
@@ -152,69 +159,18 @@
           </tr>
           {% for row in denoms %}
           <tr>
-            <td>{{row.note}}</td>
+            <td style="padding-right: 20px; padding-left: 20px;">{{row.note}}</td>
             <td>{{row.nums}}</td>
             <td>{{row.amt}}</td>
             <td>-</td>
           </tr>
           {% endfor %}
-          <!--
           <tr>
-            <td>500 x</td>
-            <td>{{denoms.1.nums}}</td>
-            <td>{{denoms.1.amt}}</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>200 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>100 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>50 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>20 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>10 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>5 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Coins</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr> -->
-          <tr>
-            <td style="border-bottom-style: hidden; border-left-style: hidden;">
+            <td colspan="2" style="border-bottom-style: hidden; border-left-style: hidden;">
               <div style="text-align: right;">Total</div>
             </td>
-
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{file.amount}}</td>
+            <td>-</td>
           </tr>
         </table>
       </td>
@@ -229,11 +185,11 @@
         <strong>State Bank of India</strong> <span style="float: right;">Date <table style="display:inline-table"><tr><td>{{date.day}}</td><td>{{date.month}}</td><td>{{date.year}}</td></tr></table></span><br>
         <strong>Branch:</strong>{{file.account.branch}}<br>
 
-        <span style="font-size: 5px;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
+        <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
         <table>
           <tr>
             {% for n in file.account.ac_no %}
-              <td>{{n}}</td>
+              <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
@@ -245,8 +201,7 @@
           
         <p>Email ID _______________________________________</p>
         <!-- <p>Rupees in Words ___________________________________</p> -->
-        <p>Rupees in Words <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{amount_in_words}}</span>
-        </p>
+        <p>Rupees in Words: {{amount_in_words|safe}}</p>
         <table class="blank">
           <tr>
             <td colspan="6" style="background-color: black;color: white;">

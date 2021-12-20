@@ -1,6 +1,7 @@
 from weasyprint import HTML
 import inflect
 import json
+from textwrap import wrap
 
 from django.utils import timezone
 from django.template.loader import render_to_string
@@ -29,11 +30,19 @@ class GeneratePDF:
 
             denoms.append(item)
 
-        amount_to_words = inflect.engine()
+        inf_engine = inflect.engine()
+        amount_to_words = inf_engine.number_to_words(self.cfile.amount)
+        str_amt = ''
+        for wrap_amt in wrap(f'{amount_to_words} Rupees Only',30):
+            str_amt+= f'''
+                <span style="border-bottom: 1px solid #000;">
+                    {wrap_amt.title()}
+                </span><br>
+            '''
         context = {
             'file': self.cfile,
             'date': timezone.now(),
-            'amount_in_words': amount_to_words.number_to_words(self.cfile.amount),
+            'amount_in_words': str_amt,
             'url':  self.url, # strip last /
             'denoms': denoms,
         }
