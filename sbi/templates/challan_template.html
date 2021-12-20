@@ -147,19 +147,22 @@
           <tr>
             <td>Notes</td>
             <td>No.</td>
-            <td>RS</td>
+            <td>₹</td>
             <td>P</td>
           </tr>
+          {% for row in denoms %}
           <tr>
-            <td>2000 x</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{row.note}}</td>
+            <td>{{row.nums}}</td>
+            <td>{{row.amt}}</td>
+            <td>-</td>
           </tr>
+          {% endfor %}
+          <!--
           <tr>
             <td>500 x</td>
-            <td></td>
-            <td></td>
+            <td>{{denoms.1.nums}}</td>
+            <td>{{denoms.1.amt}}</td>
             <td></td>
           </tr>
           <tr>
@@ -203,7 +206,7 @@
             <td></td>
             <td></td>
             <td></td>
-          </tr>
+          </tr> -->
           <tr>
             <td style="border-bottom-style: hidden; border-left-style: hidden;">
               <div style="text-align: right;">Total</div>

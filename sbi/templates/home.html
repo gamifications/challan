@@ -126,16 +126,16 @@
 <script type="text/javascript">
   var container = document.getElementById('amount_table');
   // var save = document.getElementById('btn_save');
-  const data = [[false, "2000 x", "", "", ""], [false, "500 x", "", "", ""], [false, "200 x", "", "", ""],
-  [false, "100 x", "", "", ""], [false, "50 x", "", "", ""], [false, "20 x", "", "", ""], [false, "10 x", "", "", ""],
-  [false, "5 x", "", "", ""], [false, "coins", "", "", ""],];
+  const data = [[false, "2000 x", ""], [false, "500 x", ""], [false, "200 x", ""],
+  [false, "100 x", ""], [false, "50 x", ""], [false, "20 x", ""], [false, "10 x", ""],
+  [false, "5 x", ""], [false, "coins", ""],];
   // const hyperformulaInstance = HyperFormula.buildEmpty();
   var amount_table = new Handsontable(container, {
     // columns: [ {}, {}, {}],
     columns: [
       { data: 1, type: "text" },
       { data: 2, type: "numeric" },
-      { data: 3, readOnly: true }, { data: 4, readOnly: true },
+      // { data: 3, readOnly: true }, { data: 4, readOnly: true },
     ],
     colWidths: [100, 40, 100, 40],
     data,
@@ -147,8 +147,8 @@
     colHeaders: [
       'Notes',
       'No.',
-      'rs',
-      'P',
+      // 'rs',
+      // 'P',
     ],
     licenseKey: 'non-commercial-and-evaluation',
     afterChange(changes, source) {
