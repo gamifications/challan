@@ -23,7 +23,10 @@ from django.conf.urls.static import static
 from sbi import views #  import home
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.SBIBankView.as_view(), name='sbi_challan'),
+    path('otherbanks/', views.OtherBankView.as_view(), name='otherbank_challan'),
+
+
     path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),

@@ -1,0 +1,18 @@
+{% extends 'sbi/base.html' %}
+{% load static %}
+
+
+{% block extraextra_content %}
+<div class="card text-center">
+  <div class="card-header">
+    {% include '_header.html' with active='other' %}
+  </div>
+  <div class="card-body">
+      other bank
+      <form method="post" action=".">{% csrf_token %}
+      <button type="submit" class="btn btn-primary">Generate Challan</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

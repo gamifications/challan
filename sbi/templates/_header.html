@@ -1,0 +1,9 @@
+
+<ul class="nav nav-tabs card-header-tabs">
+  <li class="nav-item">
+    <a class="nav-link{% if active == 'sbi' %} active{% endif %}" href="{% url 'sbi_challan' %}">SBI Bank</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link{% if active == 'other' %} active{% endif %}" href="{% url 'otherbank_challan' %}">Other Banks</a>
+  </li>
+</ul>

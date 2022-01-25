@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %}
+    {% block extraextracss %}{% endblock %}
+{% endblock %}
+
+
+{% block content %}
+    {% block extraextra_content %}{% endblock %}
+    
+    <hr>
+    <table class="table table-bordered">
+    <tr>
+        <th colspan="3">Challans(Latest 5)</th>
+    </tr>
+    {% for file in files %}
+    <tr>
+        <td>{{file.id}}</td>
+        <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
+        <td>{{file.uploading_date}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
