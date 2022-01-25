@@ -43,7 +43,7 @@
       <div class="row mb-3">
         <label for="amount" class="col-sm-2 col-form-label">Amount</label>
         <div class="col-sm-6">
-          <input class="form-control" id="txtamount" name="amount" readonly>
+          <input class="form-control readonly" id="txtamount" name="amount" required>
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Generate Challan</button>
@@ -58,7 +58,7 @@
   {% for file in files %}
   <tr>
     <td>{{file.id}}</td>
-    <td><a href="{{file.challanfile.url}}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
+    <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
     <td>{{file.uploading_date}}</td>
   </tr>
   {% endfor %}
@@ -124,6 +124,11 @@
 <script src="{% static 'handsontable/handsontable.full.min.js' %}"></script>
 <!-- <script src="{% static 'handsontable/hyperformula.full.min.js' %}"></script> -->
 <script type="text/javascript">
+  // https://stackoverflow.com/a/25694734
+  $(".readonly").keydown(function(e){
+        e.preventDefault();
+    });
+
   var container = document.getElementById('amount_table');
   // var save = document.getElementById('btn_save');
   const data = [[false, "2000 x", ""], [false, "500 x", ""], [false, "200 x", ""],
@@ -163,9 +168,20 @@
       if (amts[6]) total+=amts[6] * 10;
       if (amts[7]) total+=amts[7] * 5;
       if (amts[8]) total+=amts[8];
-      $('#txtamount').val(total);
-      $('#txt_denom').val(JSON.stringify(amts));
-      // console.log(total);
+
+      if(!isNaN(parseFloat(total))) {
+          // is float  
+          $('#txtamount').val(total);
+          if (total===0) {
+            $('#txtamount').val('');
+          }
+          
+          $('#txt_denom').val(JSON.stringify(amts));  
+      } else {
+        $('#txtamount').val('');
+        // alert(JSON.stringify(['','','','','','','','','']));
+      }
+      
     },
   });
 
