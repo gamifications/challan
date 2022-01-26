@@ -35,8 +35,9 @@ class SBIBankView(View):
 class OtherBankView(View):
 
     def post(self, request):
+        amt = request.POST['amount']
         cfile = OtherBankChallanFile.objects.create(
-            amount=55.50,
+            amount=amt,
         )
         pdf_gen = GenerateOtherBanksPDF(cfile, request.build_absolute_uri('/')[:-1])
         pdf_gen.generate()

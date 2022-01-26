@@ -8,8 +8,13 @@
     {% include '_header.html' with active='other' %}
   </div>
   <div class="card-body">
-      other bank
       <form method="post" action=".">{% csrf_token %}
+        <div class="row mb-3">
+          <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+          <div class="col-sm-6">
+            <input class="form-control" id="txtamount" name="amount" required>
+          </div>
+        </div>
       <button type="submit" class="btn btn-primary">Generate Challan</button>
     </form>
   </div>

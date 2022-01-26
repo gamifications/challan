@@ -9,6 +9,17 @@ from django.conf import settings
 
 from django.core.files import File
 
+def amt_to_words(amt):
+    inf_engine = inflect.engine()
+    amount_to_words = inf_engine.number_to_words(amt)
+    str_amt = ''
+    for wrap_amt in wrap(f'{amount_to_words} Rupees Only',30):
+        str_amt+= f'''
+            <span style="border-bottom: 1px solid #000;">
+                {wrap_amt.title()}
+            </span><br>
+        '''
+    return str_amt
 class GeneratePDF:
     def __init__(self, cfile, url):
         self.url = url 
@@ -30,19 +41,11 @@ class GeneratePDF:
 
             denoms.append(item)
 
-        inf_engine = inflect.engine()
-        amount_to_words = inf_engine.number_to_words(self.cfile.amount)
-        str_amt = ''
-        for wrap_amt in wrap(f'{amount_to_words} Rupees Only',30):
-            str_amt+= f'''
-                <span style="border-bottom: 1px solid #000;">
-                    {wrap_amt.title()}
-                </span><br>
-            '''
+        
         context = {
             'file': self.cfile,
             'date': self.cfile.uploading_date, # timezone.now(),
-            'amount_in_words': str_amt,
+            'amount_in_words': amt_to_words(self.cfile.amount),
             'url':  self.url, # strip last /
             'denoms': denoms,
         }
@@ -61,6 +64,7 @@ class GenerateOtherBanksPDF:
         context = {
             'file': self.cfile,
             'date': timezone.now(),
+            'amount_in_words': amt_to_words(self.cfile.amount),
             'url':  self.url, # strip last /
         }
         
