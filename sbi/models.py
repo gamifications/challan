@@ -20,3 +20,14 @@ class ChallanFile(models.Model):
     
     def get_denominations(self):
         return self.cash_deposit.split(',')
+
+
+
+class OtherBankChallanFile(models.Model):
+    amount = models.FloatField(default=0)
+    challanfile = models.FileField(upload_to = 'chalan/')
+    uploading_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.uploading_date}'
+    

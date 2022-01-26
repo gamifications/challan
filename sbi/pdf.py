@@ -41,14 +41,30 @@ class GeneratePDF:
             '''
         context = {
             'file': self.cfile,
-            'date': timezone.now(),
+            'date': self.cfile.uploading_date, # timezone.now(),
             'amount_in_words': str_amt,
             'url':  self.url, # strip last /
             'denoms': denoms,
         }
         
-        html = HTML(string=render_to_string('challan_template.html', context))
+        html = HTML(string=render_to_string('pdf/sbi_challan_template.html', context))
         html.write_pdf(f'{settings.MEDIA_ROOT}/output/challan.pdf')
 
         self.cfile.challanfile.save(f'{self.cfile.id}.pdf', File(open(f'{settings.MEDIA_ROOT}/output/challan.pdf','rb')))
 
+class GenerateOtherBanksPDF:
+    def __init__(self, cfile, url):
+        self.url = url 
+        self.cfile = cfile
+
+    def generate(self):
+        context = {
+            'file': self.cfile,
+            'date': timezone.now(),
+            'url':  self.url, # strip last /
+        }
+        
+        html = HTML(string=render_to_string('pdf/otherbank_challan_template.html', context))
+        html.write_pdf(f'{settings.MEDIA_ROOT}/output/challan.pdf')
+
+        self.cfile.challanfile.save(f'{self.cfile.id}.pdf', File(open(f'{settings.MEDIA_ROOT}/output/challan.pdf','rb')))

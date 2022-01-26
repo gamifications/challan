@@ -1,25 +1,14 @@
 from django.shortcuts import redirect, render
-from django.http import JsonResponse # , HttpResponse
-
-
+from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 
-
-from .models import ChallanFile, Account
+from .models import ChallanFile, Account, OtherBankChallanFile
 from .forms import AccountForm
-from .pdf import GeneratePDF
-# Create your views here.
-
-
-
-
-# 
-
-
-
+from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
 @method_decorator([login_required], name='dispatch')
 class SBIBankView(View):
@@ -32,7 +21,7 @@ class SBIBankView(View):
         )
         pdf_gen = GeneratePDF(cfile, request.build_absolute_uri()[:-1])
         pdf_gen.generate()
-        
+        messages.success(request, 'Challan generated successfully!')
         return redirect('sbi_challan')
     
     def get(self, request):
@@ -45,31 +34,19 @@ class SBIBankView(View):
 @method_decorator([login_required], name='dispatch')
 class OtherBankView(View):
 
-    
+    def post(self, request):
+        cfile = OtherBankChallanFile.objects.create(
+            amount=55.50,
+        )
+        pdf_gen = GenerateOtherBanksPDF(cfile, request.build_absolute_uri('/')[:-1])
+        pdf_gen.generate()
+        messages.success(request, 'Challan generated successfully!')
+        return redirect('otherbank_challan')
     def get(self, request):
         context = {
-            'files':ChallanFile.objects.order_by('-uploading_date')[:5],
-            'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in Account.objects.order_by('name')],
+            'files':OtherBankChallanFile.objects.order_by('-uploading_date')[:5],
         }
         return render(request,'sbi/other.html',context)
-
-
-
-# @login_required
-# def home(request):
-#     if request.method == 'POST':
-#         cfile = ChallanFile.objects.create(
-#             amount=request.POST['amount'],
-#             account_id = request.POST['acno'],
-#             cash_deposit= request.POST['denominations'],
-#         )
-#         pdf_gen = GeneratePDF(cfile, request.build_absolute_uri()[:-1])
-#         pdf_gen.generate()
-        
-#         return redirect('/')
-
-
-    
 
 
 class AccountView(View):
