@@ -4,3 +4,4 @@ inflect
 psycopg2
 python-decouple==3.4
 whitenoise
+requests

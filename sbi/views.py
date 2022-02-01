@@ -78,3 +78,13 @@ class OtherbankAccountView(View):
             message = {'status':'failed', 'data':str(form.errors)}
 
         return JsonResponse(message)
+
+class IFSCView(View):
+    def post(self,request):
+        import requests
+        r = requests.get(f'https://bank-apis.justinclicks.com/API/V1/IFSC/{request.POST["ifsc"]}/')
+        try:
+            resp = r.json()
+        except:
+            resp = None
+        return render(request, 'sbi/bank_details.html', {'bank': resp})

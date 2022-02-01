@@ -74,25 +74,7 @@
               <textarea class="form-control" name="ac_no"></textarea>
             </div>
           </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">IFSC code:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="ifsc">
-            </div>
-          </div>
 
-          <div class="mb-3 row">
-            <label for="bankname" class="col-sm-2 col-form-label">Bank</label>
-            <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="bankname" value="HDFC Bank"">
-            </div>
-          </div>
-          <div class="mb-3 row">
-            <label for="branchname" class="col-sm-2 col-form-label">Branch</label>
-            <div class="col-sm-10">
-              <input type="text" readonly class="form-control-plaintext" id="branchname" value="Vadakkencherry">
-            </div>
-          </div>
 
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Tel No.:</label>
@@ -107,7 +89,21 @@
             </div>
           </div>
 
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">IFSC:</label>
+            <div class="col-sm-10">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="IFSC code" name="ifsc" id="txt_ifsc">
+                <button type="submit" class="btn btn-secondary" id="btn_ifsc">Get Bank Details</button>
+              </div>
+            </div>
+          </div>
+
         </form>
+        <hr>
+        <div id="bank_details"></div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -123,46 +119,56 @@
 <script src="{% static 'select2/select2.min.js' %}"></script>
 <script>
 
-let ac_data = {{ accounts| safe}};
-function setTextboxes(data) {
-  $("#txt_acno").val(data['account']);
-  // $("#txt_telephone").val(data['account']);
+  let ac_data = {{ accounts| safe}};
+  function setTextboxes(data) {
+    $("#txt_acno").val(data['account']);
+    // $("#txt_telephone").val(data['account']);
 
-}
+  }
 
-$('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
-$('#sel_account').on('select2:select', function (e) {
+  $('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
+  $('#sel_account').on('select2:select', function (e) {
 
-  setTextboxes(e.params.data);
-});
-
-
-
-$("#btn_add_account").click(function (e) {
-  e.preventDefault();
-  let addperiod = $('#exampleModal');
-  let datas = $('#frm_addaccount').serializeArray();
-  // $('#frm_addperiod :input').attr('disabled', true);    
-  $.ajax({
-    type: "POST",
-    url: "{% url 'otherbankaccount' %}",
-    data: datas
-  }).done(function (resp) {
-    // $('#frm_addevent :input').each(function(){this.disabled = false;});
-    if (resp['status'] == 'success') {
-      addperiod.modal('hide');
-      let newdata = resp['data'];
-      ac_data.push(newdata);
-      setTextboxes(newdata);
-      $('#sel_account').select2({ data: ac_data });
-      $("#sel_account").val(newdata['id']).trigger('change');
-      $("#frm_addaccount").trigger("reset");
-    } else {
-      addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
-    }
-
+    setTextboxes(e.params.data);
   });
-});
+
+
+
+
+  $("#btn_ifsc").click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'ajax_ifsc' %}",
+      data: { 'ifsc': $("#txt_ifsc").val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'}
+    }).done(function (resp) { $("#bank_details").html(resp); });
+  });
+
+  $("#btn_add_account").click(function (e) {
+    e.preventDefault();
+    let addperiod = $('#exampleModal');
+    let datas = $('#frm_addaccount').serializeArray();
+    // $('#frm_addperiod :input').attr('disabled', true);    
+    $.ajax({
+      type: "POST",
+      url: "{% url 'otherbankaccount' %}",
+      data: datas
+    }).done(function (resp) {
+      // $('#frm_addevent :input').each(function(){this.disabled = false;});
+      if (resp['status'] == 'success') {
+        addperiod.modal('hide');
+        let newdata = resp['data'];
+        ac_data.push(newdata);
+        setTextboxes(newdata);
+        $('#sel_account').select2({ data: ac_data });
+        $("#sel_account").val(newdata['id']).trigger('change');
+        $("#frm_addaccount").trigger("reset");
+      } else {
+        addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
 
 </script>
 
