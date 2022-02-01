@@ -6,7 +6,7 @@ class Account(models.Model):
     ac_no = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     telephone = models.CharField(max_length=100)
-    pan = models.CharField(max_length=100)
+    pan = models.CharField(max_length=100, blank=True)
 
 class ChallanFile(models.Model):
     account = models.ForeignKey('Account', on_delete=models.CASCADE, null=True)

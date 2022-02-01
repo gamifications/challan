@@ -66,7 +66,7 @@
       </div>
       <div class="modal-body">
 
-        <form id="frm_addaccount">{% csrf_token %}
+        <form id="frm_addaccount" oninput='ac_no2.setCustomValidity(ac_no2.value != ac_no.value ? "A/C no do not match." : "")'>{% csrf_token %}
           <div class="errormsg"></div>
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Name:</label>
@@ -75,11 +75,19 @@
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">A/C number:</label>
+            <label class="col-sm-2 col-form-label">A/C no:</label>
             <div class="col-sm-10">
               <textarea class="form-control" name="ac_no"></textarea>
             </div>
           </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Confirm A/C no:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no2"></textarea>
+            </div>
+          </div>
+
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Branch:</label>
             <div class="col-sm-10">

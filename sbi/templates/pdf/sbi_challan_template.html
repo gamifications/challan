@@ -43,6 +43,11 @@
   <table class="noborder">
     <tr>
       <td style="border:none;border-right: 1px dashed black; padding:20px">
+        <!-- 
+          ===============================================
+          coloumn 1
+          ===============================================
+        -->
         <div class="bordered">
           <div style="font-weight: bold;">
             <img src="{{url}}{% static 'sbi.svg' %}" style="height:16px"> 
@@ -106,34 +111,38 @@
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
+              <td>{{file.amount}}</td>
+              <td>00</td>
             </tr>
           </table>
         </div>
       </td>
       <td class="noborder">
-        <!-- coloumn 2-->
+
+
+        <!-- 
+          ===============================================
+          coloumn 2
+          ===============================================
+        -->
         <table class="center-table">
           <tr>
             <td colspan="4" style="text-align: left;">
               <div style="padding: 5px;">
                 PAN No.
-
-                <table class="blank">
+                <table>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    {% if file.account.pan %}
+                      {% for n in file.account.pan %}
+                      <td style="padding: 4px;">{{n}}</td>
+                      {% endfor %}
+                    {% else %}
+                    {# if no pan show blank cells #}
+                      {% for n in '........' %}<td style="padding: 4px;"></td>{% endfor %}
+                    {% endif %}
                   </tr>
                 </table>
+
                 OR
                 Form 60
                 <table class="blank">
@@ -175,7 +184,11 @@
         </table>
       </td>
       <td class="noborder">
-        <!-- coloumn 3-->
+        <!-- 
+          ===============================================
+          coloumn 3
+          ===============================================
+        -->
         <div style="font-weight: bold;">
           <img src="{{url}}{% static 'sbi.svg' %}" style="height:16px"> 
           <span style="font-size: 20px;">SBI </span>
@@ -238,8 +251,8 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td></td>
+            <td>{{file.amount}}</td>
+            <td>00</td>
           </tr>
         </table>
         <p>Name of Depositor Aadhaar No. Signature of Depositor</p>

@@ -17,17 +17,21 @@
       
         <table class="table table-bordered">
         <tr>
-            <th colspan="3">Challans(Latest 5)</th>
+            <th colspan="5">Challans(Latest 5)</th>
         </tr>
+        <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th></tr>
         {% for file in files %}
         <tr>
             <td>{{file.id}}</td>
-            <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
+            <td>{{file.account.name}}</td>
+            <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>
             <td>{{file.uploading_date}}</td>
+            <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
+            
         </tr>
         {% endfor %}
         <tr>
-            <th colspan="3"><a class="btn btn-primary">Show More</a></th>
+            <th colspan="5"><a class="btn btn-primary">Show More</a></th>
         </tr>
         </table>
     </div>
