@@ -133,7 +133,7 @@
                 <table>
                   <tr>
                     {% if file.account.pan %}
-                      {% for n in file.account.pan %}
+                      {% for n in file.account.pan|upper %}
                       <td style="padding: 4px;">{{n}}</td>
                       {% endfor %}
                     {% else %}

@@ -55,7 +55,10 @@
 </div>
 
 
-
+<!-- 
+  MODAL
+  =================================================================================
+-->
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -64,9 +67,82 @@
         <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <!--
       <div class="modal-body">
 
-        <form id="frm_addaccount" oninput='ac_no2.setCustomValidity(ac_no2.value != ac_no.value ? "A/C no do not match." : "")'>{% csrf_token %}
+        
+        <form class="row g-3 needs-validation" novalidate id="frm_addaccount">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label for="validationCustom01" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="validationCustom01" name="name" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Please enter a name.
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="validationCustom02" class="col-sm-2 col-form-label">A/C no:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no" id="validationCustom02" required></textarea>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Please enter a name.
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row mb-3">
+            <label for="validationCustom03" class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="branch" id="validationCustom03" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Please enter a name.
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="validationCustom04" class="col-sm-2 col-form-label">Tel No.:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="telephone" id="validationCustom04" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Please enter a name.
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">PAN:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+      </div>
+    -->
+
+
+      <div class="modal-body">
+
+        <form id="frm_addaccount">{% csrf_token %}
           <div class="errormsg"></div>
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Name:</label>
@@ -78,13 +154,6 @@
             <label class="col-sm-2 col-form-label">A/C no:</label>
             <div class="col-sm-10">
               <textarea class="form-control" name="ac_no"></textarea>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Confirm A/C no:</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" name="ac_no2"></textarea>
             </div>
           </div>
 
@@ -228,6 +297,30 @@
 
     });
   });
+
+/*
+
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+*/
 </script>
 
 {% endblock %}

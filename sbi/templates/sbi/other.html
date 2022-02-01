@@ -1,22 +1,169 @@
 {% extends 'sbi/base.html' %}
 {% load static %}
-
+{% block extraextracss %}
+<link href="{% static 'select2/select2.min.css' %}" rel="stylesheet" />
+{% endblock %}
 
 {% block extraextra_content %}
 
-  <div class="card-header">
-    {% include '_header.html' with active='other' %}
-  </div>
-  <div class="card-body">
-      <form method="post" action=".">{% csrf_token %}
-        <div class="row mb-3">
-          <label for="amount" class="col-sm-2 col-form-label">Amount</label>
-          <div class="col-sm-6">
-            <input class="form-control" id="txtamount" name="amount" required>
+<div class="card-header">
+  {% include '_header.html' with active='other' %}
+</div>
+<div class="card-body">
+  <form method="post" action=".">{% csrf_token %}
+    <div class="row mb-3">
+      <label for="acno" class="col-sm-2 col-form-label">Name:</label>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-10 col-sm-11">
+            <select id="sel_account" name="acno" class="form-control" required>
+              <option value=''>--Select--</option>
+            </select>
+          </div>
+          <div class="col-2 col-sm-1">
+            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
+              data-bs-target="#exampleModal">+</button>
           </div>
         </div>
-      <button type="submit" class="btn btn-primary">Generate Challan</button>
-    </form>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label">A/C No.</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" disabled id="txt_acno">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+      <div class="col-sm-6">
+        <input class="form-control" id="txtamount" name="amount" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Generate Challan</button>
+  </form>
+</div>
+
+
+
+
+<!-- 
+  MODAL
+  =================================================================================
+-->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="frm_addaccount">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">A/C no:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no"></textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">IFSC code:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="ifsc">
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="bankname" class="col-sm-2 col-form-label">Bank</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="bankname" value="HDFC Bank"">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="branchname" class="col-sm-2 col-form-label">Branch</label>
+            <div class="col-sm-10">
+              <input type="text" readonly class="form-control-plaintext" id="branchname" value="Vadakkencherry">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Tel No.:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">PAN:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}
 
+
+{% block extrajs %}
+<script src="{% static 'select2/select2.min.js' %}"></script>
+<script>
+
+let ac_data = {{ accounts| safe}};
+function setTextboxes(data) {
+  $("#txt_acno").val(data['account']);
+  // $("#txt_telephone").val(data['account']);
+
+}
+
+$('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
+$('#sel_account').on('select2:select', function (e) {
+
+  setTextboxes(e.params.data);
+});
+
+
+
+$("#btn_add_account").click(function (e) {
+  e.preventDefault();
+  let addperiod = $('#exampleModal');
+  let datas = $('#frm_addaccount').serializeArray();
+  // $('#frm_addperiod :input').attr('disabled', true);    
+  $.ajax({
+    type: "POST",
+    url: "{% url 'otherbankaccount' %}",
+    data: datas
+  }).done(function (resp) {
+    // $('#frm_addevent :input').each(function(){this.disabled = false;});
+    if (resp['status'] == 'success') {
+      addperiod.modal('hide');
+      let newdata = resp['data'];
+      ac_data.push(newdata);
+      setTextboxes(newdata);
+      $('#sel_account').select2({ data: ac_data });
+      $("#sel_account").val(newdata['id']).trigger('change');
+      $("#frm_addaccount").trigger("reset");
+    } else {
+      addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+    }
+
+  });
+});
+
+</script>
+
+{% endblock %}

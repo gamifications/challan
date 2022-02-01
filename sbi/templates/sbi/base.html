@@ -23,7 +23,7 @@
         {% for file in files %}
         <tr>
             <td>{{file.id}}</td>
-            <td>{{file.account.name}}</td>
+            <td>{% if otherbank %} {{file.account.name}}{% else %}{{file.account.name}}{% endif %}</td>
             <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>
             <td>{{file.uploading_date}}</td>
             <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>

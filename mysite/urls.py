@@ -31,4 +31,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('account/', views.AccountView.as_view(), name='account'),
+    path('otherbankaccount/', views.OtherbankAccountView.as_view(), name='otherbankaccount'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

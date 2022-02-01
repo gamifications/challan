@@ -6,8 +6,8 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 
 
-from .models import ChallanFile, Account, OtherBankChallanFile
-from .forms import AccountForm
+from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount
+from .forms import AccountForm, OtherbankAccountForm
 from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
 @method_decorator([login_required], name='dispatch')
@@ -46,6 +46,8 @@ class OtherBankView(View):
     def get(self, request):
         context = {
             'files':OtherBankChallanFile.objects.order_by('-uploading_date')[:5],
+            'otherbank':True,
+            'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.order_by('name')],
         }
         return render(request,'sbi/other.html',context)
 
@@ -54,6 +56,21 @@ class AccountView(View):
     def post(self,request):
         
         form = AccountForm(request.POST)
+        if form.is_valid():
+            item = form.save()
+            message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}
+        else:
+            message = {'status':'failed', 'data':str(form.errors)}
+
+        return JsonResponse(message)
+
+
+
+
+class OtherbankAccountView(View):
+    def post(self,request):
+        
+        form = OtherbankAccountForm(request.POST)
         if form.is_valid():
             item = form.save()
             message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}

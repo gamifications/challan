@@ -22,8 +22,15 @@ class ChallanFile(models.Model):
         return self.cash_deposit.split(',')
 
 
+class OtherBankAccount(models.Model):
+    ifsc = models.CharField(max_length=100)
+    ac_no = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=100)
+    pan = models.CharField(max_length=100, blank=True)
 
 class OtherBankChallanFile(models.Model):
+    account = models.ForeignKey('OtherBankAccount', on_delete=models.CASCADE, null=True)
     amount = models.FloatField(default=0)
     challanfile = models.FileField(upload_to = 'chalan/')
     uploading_date = models.DateTimeField(auto_now_add=True)
