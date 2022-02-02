@@ -1,4 +1,15 @@
 {% if bank %}
+<ul class="list-group">
+  <li class="list-group-item active" aria-current="true">{{bank.BANK}}</li>
+  <li class="list-group-item">Branch: {{bank.BRANCH}}</li>
+  <li class="list-group-item">CITY: {{bank.CITY}}</li>
+  <li class="list-group-item">CONTACT: {{bank.CONTACT}}</li>
+  <li class="list-group-item">
+    <span class="badge rounded-pill bg-{% if bank.RTGS %}success{%else%}danger{% endif %}">RTGS</span>
+    <span class="badge rounded-pill bg-{% if bank.NEFT %}success{%else%}danger{% endif %}">NEFT</span>
+  </li>
+</ul>
+{% comment %}
 <div class="list-group">
     <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
       <div class="d-flex w-100 justify-content-between">
@@ -32,6 +43,7 @@
 
     </ul>
   </div>
+  {% endcomment %}
 {% else %}
 <div class="alert alert-danger" role="alert">
     <strong> IFSC Code not found.</strong> Please check IFSC code again!
