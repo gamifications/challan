@@ -21,8 +21,9 @@ def amt_to_words(amt):
         '''
     return str_amt
 class GeneratePDF:
-    def __init__(self, cfile, url):
+    def __init__(self, cfile,account, url):
         self.url = url 
+        self.account = account
         self.cfile = cfile
 
     def generate(self):
@@ -44,6 +45,7 @@ class GeneratePDF:
         
         context = {
             'file': self.cfile,
+            'account':self.account,
             'date': self.cfile.uploading_date, # timezone.now(),
             'amount_in_words': amt_to_words(self.cfile.amount),
             'url':  self.url, # strip last /

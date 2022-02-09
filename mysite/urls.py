@@ -31,6 +31,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('account/', views.AccountView.as_view(), name='account'),
+    path('account/<int:pk>/', views.AccountEditView.as_view(), name="account-detail"),
+
     path('otherbankaccount/', views.OtherbankAccountView.as_view(), name='otherbankaccount'),
     path('ajax_ifsc/', views.IFSCView.as_view(), name='ajax_ifsc'),
     

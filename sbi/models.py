@@ -7,9 +7,11 @@ class Account(models.Model):
     name = models.CharField(max_length=100)
     telephone = models.CharField(max_length=100)
     pan = models.CharField(max_length=100, blank=True)
+    email= models.EmailField(blank=True)
 
 class ChallanFile(models.Model):
-    account = models.ForeignKey('Account', on_delete=models.CASCADE, null=True)
+    # account = models.ForeignKey('Account', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100, blank=True)
     cash_deposit = models.CharField(max_length=100) # '20,10, 500
     amount = models.FloatField(default=0)
     challanfile = models.FileField(upload_to = 'chalan/')

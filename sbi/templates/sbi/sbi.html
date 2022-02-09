@@ -12,7 +12,8 @@
   {% include '_header.html' with active='sbi' %}
 </div>
 <div class="card-body">
-  <form method="post" action=".">{% csrf_token %} <input type="hidden" name="denominations" id="txt_denom">
+  <form method="post" action="." id="frm_ac">{% csrf_token %} 
+    <input type="hidden" name="denominations" id="txt_denom">
     <div class="row mb-3">
       <label for="acno" class="col-sm-2 col-form-label">Name:</label>
       <div class="col-sm-10">
@@ -24,7 +25,7 @@
           </div>
           <div class="col-2 col-sm-1">
             <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
-              data-bs-target="#exampleModal">+</button>
+              data-bs-target="#exampleModal"><i class="fa fa-plus"></i></button>
           </div>
         </div>
       </div>
@@ -32,15 +33,19 @@
     <div class="row mb-3">
       <label class="col-sm-2 col-form-label">A/C No.</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" disabled id="txt_acno">
+        <div class="row">
+          <div class="col-8 col-sm-9">
+            <input type="text" class="form-control" disabled id="txt_acno">
+          </div>
+          <div class="col-4 col-sm-3">
+            <div class="btn-group" role="group" aria-label="Basic mixed styles">
+              <button type="button" class="btn btn-danger" id="btn_delete_ac"><i class="fa fa-trash fa-lg"></i></button>
+              <button type="button" class="btn btn-warning" id="btn_edit_ac"><i class="fa fa-edit fa-lg"></i></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- <div class="row mb-3">
-      <label for="txt_telephone" class="col-sm-2 col-form-label">Telephone</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" disabled id="txt_telephone">
-      </div>
-    </div> -->
     <div id="amount_table"></div><br>
     <div class="row mb-3">
       <label for="amount" class="col-sm-2 col-form-label">Amount</label>
@@ -56,7 +61,7 @@
 
 
 <!-- 
-  MODAL
+  ADD MODAL
   =================================================================================
 -->
 
@@ -67,7 +72,276 @@
         <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <!--
+
+      <div class="modal-body">
+        <form id="frm_addaccount">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">A/C no:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no"></textarea>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="branch">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Tel No.:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">PAN:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 
+  EDIT MODAL
+  =================================================================================
+-->
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="frm_editaccount">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">A/C no:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" name="ac_no"></textarea>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="branch">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Tel No.:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">PAN:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_edit_account">Update A/c</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extrajs %}
+<script src="{% static 'select2/select2.min.js' %}"></script>
+<script src="{% static 'handsontable/handsontable.full.min.js' %}"></script>
+<!-- <script src="{% static 'handsontable/hyperformula.full.min.js' %}"></script> -->
+<script type="text/javascript">
+  // https://stackoverflow.com/a/25694734
+  $(".readonly").keydown(function (e) {
+    e.preventDefault();
+  });
+
+  // $("#editModal").on('show.bs.modal', function () {
+  //     console.log('Show Modal called!');
+  // });
+
+  var container = document.getElementById('amount_table');
+  // var save = document.getElementById('btn_save');
+  const data = [[false, "2000 x", ""], [false, "500 x", ""], [false, "200 x", ""],
+  [false, "100 x", ""], [false, "50 x", ""], [false, "20 x", ""], [false, "10 x", ""],
+  [false, "5 x", ""], [false, "coins", ""],];
+  var amount_table = new Handsontable(container, {
+    columns: [
+      { data: 1, type: "text" },
+      { data: 2, type: "numeric" },
+      // { data: 3, readOnly: true }, { data: 4, readOnly: true },
+    ],
+    colWidths: [100, 40, 100, 40],
+    data,
+    rowHeaders: true,
+    colHeaders: [
+      'Notes',
+      'No.',
+      // 'rs',
+      // 'P',
+    ],
+    licenseKey: 'non-commercial-and-evaluation',
+    afterChange(changes, source) {
+      let amts = this.getDataAtCol(1);
+      let total = 0;
+      if (amts[0]) total += amts[0] * 2000;
+      if (amts[1]) total += amts[1] * 500;
+      if (amts[2]) total += amts[2] * 200;
+      if (amts[3]) total += amts[3] * 100;
+      if (amts[4]) total += amts[4] * 50;
+      if (amts[5]) total += amts[5] * 20;
+      if (amts[6]) total += amts[6] * 10;
+      if (amts[7]) total += amts[7] * 5;
+      if (amts[8]) total += amts[8];
+
+      if (!isNaN(parseFloat(total))) {
+        // is float  
+        $('#txtamount').val(total);
+        if (total === 0) {
+          $('#txtamount').val('');
+        }
+        $('#txt_denom').val(JSON.stringify(amts));
+      } else {
+        $('#txtamount').val('');
+      }
+
+    },
+  });
+
+
+  let ac_data = {{ accounts| safe}};
+  function setTextboxes(data) {
+    // set below disabled text box
+    $("#txt_acno").val(data['account']);
+
+    // set inputboxes in edit account model
+    $('#frm_editaccount input[name="name"]').val(data['text']);
+    $('#frm_editaccount textarea[name="ac_no"]').val(data['account']);
+    $('#frm_editaccount input[name="branch"]').val(data['branch']);
+    $('#frm_editaccount input[name="telephone"]').val(data['telephone']);
+    $('#frm_editaccount input[name="pan"]').val(data['pan']);
+  }
+
+  $('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
+  $('#sel_account').on('select2:select', function (e) {
+    setTextboxes(e.params.data);
+  });
+  
+  
+  $("#btn_edit_ac").click(function (e) {
+    let ac_id = $("#sel_account").val();
+    if (ac_id) {
+      $("#editModal").modal('show');
+    } else {
+      alert('Please select an account.')
+    }
+  });
+
+  $("#btn_delete_ac").click(function (e) {
+    let ac_id = $("#sel_account").val();
+    if (ac_id) {
+      // ajax delete account
+      $.ajax({
+        type: "DELETE",
+        url: `/account/${ac_id}/`,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      }).done(function (resp) {
+        // refresh 
+        location.reload();
+      });
+      
+    } else {
+      alert('Please select an account.')
+    }
+    
+  });
+  
+
+  $("#btn_add_account").click(function (e) {
+    e.preventDefault();
+    let addperiod = $('#exampleModal');
+    let datas = $('#frm_addaccount').serializeArray();  
+    $.ajax({
+      type: "POST",
+      url: "{% url 'account' %}",
+      data: datas
+    }).done(function (resp) {
+      if (resp['status'] == 'success') {
+        addperiod.modal('hide');
+        let newdata = resp['data'];
+        ac_data.push(newdata);
+        setTextboxes(newdata);
+        $('#sel_account').select2({ data: ac_data });
+        $("#sel_account").val(newdata['id']).trigger('change');
+        $("#frm_addaccount").trigger("reset");
+      } else {
+        addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
+  $("#btn_edit_account").click(function (e) {
+    e.preventDefault();
+    let ac_id = $("#sel_account").val();
+    let editAccount = $('#editModal');
+    let datas = $('#frm_editaccount').serializeArray();  
+    $.ajax({
+      type: "POST",
+      url: `/account/${ac_id}/`,
+      beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      data: datas
+    }).done(function (resp) {
+      if (resp['status'] == 'success') {
+        // refresh 
+        location.reload();
+
+        // editAccount.modal('hide');
+        // let newdata = resp['data'];
+        // refresh select2
+        
+      } else {
+        editAccount.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
+/*
+<!--
       <div class="modal-body">
 
         
@@ -138,168 +412,6 @@
         <button type="submit" class="btn btn-primary" id="btn_add_account">Save A/c</button>
       </div>
     -->
-
-
-      <div class="modal-body">
-
-        <form id="frm_addaccount">{% csrf_token %}
-          <div class="errormsg"></div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Name:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="name">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">A/C no:</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" name="ac_no"></textarea>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Branch:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="branch">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Tel No.:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="telephone">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">PAN:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
-            </div>
-          </div>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-{% endblock %}
-
-
-{% block extrajs %}
-<script src="{% static 'select2/select2.min.js' %}"></script>
-<script src="{% static 'handsontable/handsontable.full.min.js' %}"></script>
-<!-- <script src="{% static 'handsontable/hyperformula.full.min.js' %}"></script> -->
-<script type="text/javascript">
-  // https://stackoverflow.com/a/25694734
-  $(".readonly").keydown(function (e) {
-    e.preventDefault();
-  });
-
-  var container = document.getElementById('amount_table');
-  // var save = document.getElementById('btn_save');
-  const data = [[false, "2000 x", ""], [false, "500 x", ""], [false, "200 x", ""],
-  [false, "100 x", ""], [false, "50 x", ""], [false, "20 x", ""], [false, "10 x", ""],
-  [false, "5 x", ""], [false, "coins", ""],];
-  // const hyperformulaInstance = HyperFormula.buildEmpty();
-  var amount_table = new Handsontable(container, {
-    // columns: [ {}, {}, {}],
-    columns: [
-      { data: 1, type: "text" },
-      { data: 2, type: "numeric" },
-      // { data: 3, readOnly: true }, { data: 4, readOnly: true },
-    ],
-    colWidths: [100, 40, 100, 40],
-    data,
-    // formulas: {
-    //   engine: hyperformulaInstance,
-    //   sheetName: 'Sheet1'
-    // },
-    rowHeaders: true,
-    colHeaders: [
-      'Notes',
-      'No.',
-      // 'rs',
-      // 'P',
-    ],
-    licenseKey: 'non-commercial-and-evaluation',
-    afterChange(changes, source) {
-      let amts = this.getDataAtCol(1);
-      let total = 0;
-      if (amts[0]) total += amts[0] * 2000;
-      if (amts[1]) total += amts[1] * 500;
-      if (amts[2]) total += amts[2] * 200;
-      if (amts[3]) total += amts[3] * 100;
-      if (amts[4]) total += amts[4] * 50;
-      if (amts[5]) total += amts[5] * 20;
-      if (amts[6]) total += amts[6] * 10;
-      if (amts[7]) total += amts[7] * 5;
-      if (amts[8]) total += amts[8];
-
-      if (!isNaN(parseFloat(total))) {
-        // is float  
-        $('#txtamount').val(total);
-        if (total === 0) {
-          $('#txtamount').val('');
-        }
-
-        $('#txt_denom').val(JSON.stringify(amts));
-      } else {
-        $('#txtamount').val('');
-        // alert(JSON.stringify(['','','','','','','','','']));
-      }
-
-    },
-  });
-
-
-  let ac_data = {{ accounts| safe}};
-  function setTextboxes(data) {
-    $("#txt_acno").val(data['account']);
-    // $("#txt_telephone").val(data['account']);
-
-  }
-
-  $('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
-  $('#sel_account').on('select2:select', function (e) {
-
-    setTextboxes(e.params.data);
-  });
-
-
-
-  $("#btn_add_account").click(function (e) {
-    e.preventDefault();
-    let addperiod = $('#exampleModal');
-    let datas = $('#frm_addaccount').serializeArray();
-    // $('#frm_addperiod :input').attr('disabled', true);    
-    $.ajax({
-      type: "POST",
-      url: "{% url 'account' %}",
-      data: datas
-    }).done(function (resp) {
-      // $('#frm_addevent :input').each(function(){this.disabled = false;});
-      if (resp['status'] == 'success') {
-        addperiod.modal('hide');
-        let newdata = resp['data'];
-        ac_data.push(newdata);
-        setTextboxes(newdata);
-        $('#sel_account').select2({ data: ac_data });
-        $("#sel_account").val(newdata['id']).trigger('change');
-        $("#frm_addaccount").trigger("reset");
-      } else {
-        addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
-      }
-
-    });
-  });
-
-/*
-
   // Example starter JavaScript for disabling form submissions if there are invalid fields
 (function () {
   'use strict'

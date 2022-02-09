@@ -55,18 +55,18 @@
             <span style="font-size: 12px;">DEPOSIT/PAY IN SLIP</span>
           </div>
           <strong>State Bank of India</strong> <span style="float: right;">Date: {{date.day}}/{{date.month}}/{{date.year}}</span><br>
-          Branch:{{file.account.branch}}<br>
+          Branch:{{account.branch}}<br>
           <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
           <table>
             <tr>
-              {% for n in file.account.ac_no %}
+              {% for n in account.ac_no %}
               <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
-          <p>Name <span style="border-bottom: 1px solid #000;">{{file.account.name}}</span>
+          <p>Name <span style="border-bottom: 1px solid #000;">{{account.name}}</span>
           </p>
-          <p>Tel No <span style="border-bottom: 1px solid #000;">{{file.account.telephone}}</span>
+          <p>Tel No <span style="border-bottom: 1px solid #000;">{{account.telephone}}</span>
           </p>
           Amount <table class="blank">
             <tr>
@@ -132,8 +132,8 @@
                 PAN No.
                 <table>
                   <tr>
-                    {% if file.account.pan %}
-                      {% for n in file.account.pan|upper %}
+                    {% if account.pan %}
+                      {% for n in account.pan|upper %}
                       <td style="padding: 4px;">{{n}}</td>
                       {% endfor %}
                     {% else %}
@@ -196,20 +196,20 @@
         </div>
 
         <strong>State Bank of India</strong> <span style="float: right;">Date <table style="display:inline-table"><tr><td>{{date.day}}</td><td>{{date.month}}</td><td>{{date.year}}</td></tr></table></span><br>
-        <strong>Branch:</strong>{{file.account.branch}}<br>
+        <strong>Branch:</strong>{{account.branch}}<br>
 
         <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
         <table>
           <tr>
-            {% for n in file.account.ac_no %}
+            {% for n in account.ac_no %}
               <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
         
-          <p>Name <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{file.account.name}}</span>
+          <p>Name <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{account.name}}</span>
           </p>
-          <p>Tel No <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{file.account.telephone}}</span>
+          <p>Tel No <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{account.telephone}}</span>
           </p>
           
         <p>Email ID _______________________________________</p>
