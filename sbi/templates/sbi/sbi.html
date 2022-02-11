@@ -38,7 +38,7 @@
             <input type="text" class="form-control" disabled id="txt_acno">
           </div>
           <div class="col-4 col-sm-3">
-            <div class="btn-group" role="group" aria-label="Basic mixed styles">
+            <div class="btn-group" role="group" aria-label="Delete and Edit Button group">
               <button type="button" class="btn btn-danger" id="btn_delete_ac"><i class="fa fa-trash fa-lg"></i></button>
               <button type="button" class="btn btn-warning" id="btn_edit_ac"><i class="fa fa-edit fa-lg"></i></button>
             </div>
@@ -47,6 +47,52 @@
       </div>
     </div>
     <div id="amount_table"></div><br>
+    
+    <!-- <div class="row mb-3">
+      <div class="col-sm-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="gridCheck1">
+          <label class="form-check-label" for="gridCheck1">
+            Cheque
+          </label>
+        </div>
+      </div>
+    </div> -->
+    <div class="row mb-3">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Cheque 
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div class="row mb-3">
+                <label for="chequeamount" class="col-sm-4 col-form-label">Cheque Amount</label>
+                <div class="col-sm-6">
+                  <input type="number" class="form-control" id="txtchequeamount" name="chequeamount">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="chequenumber" class="col-sm-4 col-form-label">Cheque Number</label>
+                <div class="col-sm-6">
+                  <input type="number" class="form-control" id="txtchequenumber" name="chequenumber">
+                </div>
+              </div>
+              <!-- 
+              <div class="row mb-3">
+                <label for="chequebank" class="col-sm-2 col-form-label">chequeBank</label>
+                <div class="col-sm-6">
+                  <input class="form-control" id="txtchequebank" name="chequebank">
+                </div>
+              </div> Branch-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row mb-3">
       <label for="amount" class="col-sm-2 col-form-label">Amount</label>
       <div class="col-sm-6">
@@ -99,6 +145,12 @@
             <label class="col-sm-2 col-form-label">Tel No.:</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Email:</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" name="email">
             </div>
           </div>
           <div class="row mb-3">
@@ -157,6 +209,12 @@
             <label class="col-sm-2 col-form-label">Tel No.:</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="telephone">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Email:</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" name="email">
             </div>
           </div>
           <div class="row mb-3">
@@ -239,7 +297,6 @@
     },
   });
 
-
   let ac_data = {{ accounts| safe}};
   function setTextboxes(data) {
     // set below disabled text box
@@ -250,6 +307,7 @@
     $('#frm_editaccount textarea[name="ac_no"]').val(data['account']);
     $('#frm_editaccount input[name="branch"]').val(data['branch']);
     $('#frm_editaccount input[name="telephone"]').val(data['telephone']);
+    $('#frm_editaccount input[name="email"]').val(data['email']);
     $('#frm_editaccount input[name="pan"]').val(data['pan']);
   }
 

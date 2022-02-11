@@ -1,6 +1,7 @@
 django
 weasyprint==52.4
-inflect
+# inflect
+num2words
 psycopg2
 python-decouple==3.4
 whitenoise

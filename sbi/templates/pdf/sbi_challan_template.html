@@ -59,14 +59,15 @@
           <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
           <table>
             <tr>
-              {% for n in account.ac_no %}
+              {% for n in account.ac_no|slice:":19" %}
               <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
-          <p>Name <span style="border-bottom: 1px solid #000;">{{account.name}}</span>
+          <p>
+            Name: <span style="border-bottom: 1px solid #000; width: 260px;display: inline-block;">{{account.name}}</span>
           </p>
-          <p>Tel No <span style="border-bottom: 1px solid #000;">{{account.telephone}}</span>
+          <p>Tel No: <span style="border-bottom: 1px solid #000; width: 255px;display: inline-block;">{{account.telephone}}</span>
           </p>
           Amount <table class="blank">
             <tr>
@@ -81,11 +82,11 @@
                 Cash/Cheque No/Date & Name of Bank & Branch</td>
             </tr>
             <tr>
-              <td style="padding-right:100px"></td>
+              <td style="padding-right:100px">{% if cheque %}{{cheque.1}}{% endif %}</td>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
+              <td>{% if cheque %}{{cheque.0}}{% endif %}</td>
               <td></td>
             </tr>
             <tr>
@@ -150,7 +151,7 @@
                     <td></td>
                   </tr>
                 </table>
-                <span style="font-size: 6px;">For Cash Deposit of rs 50,000/- & Above</span>
+                <span style="font-size: 8px;">For Cash Deposit of rs 50,000/- & Above</span>
 
 
               </div>
@@ -178,7 +179,7 @@
             <td colspan="2" style="border-bottom-style: hidden; border-left-style: hidden;">
               <div style="text-align: right;">Total</div>
             </td>
-            <td>{{file.amount}}</td>
+            <td>{{denom_total}}</td>
             <td>-</td>
           </tr>
         </table>
@@ -195,24 +196,21 @@
           <span style="font-size: 12px;">DEPOSIT/PAY IN SLIP</span>
         </div>
 
-        <strong>State Bank of India</strong> <span style="float: right;">Date <table style="display:inline-table"><tr><td>{{date.day}}</td><td>{{date.month}}</td><td>{{date.year}}</td></tr></table></span><br>
+        <strong>State Bank of India</strong> <span style="float: right;">Date <table style="display:inline-table"><tr><td>{{date.day|stringformat:"02d"}}</td><td>{{date.month|stringformat:"02d"}}</td><td>{{date.year}}</td></tr></table></span><br>
         <strong>Branch:</strong>{{account.branch}}<br>
 
         <span style="font-size: 70%;">SB/CA/RD/OD/CC/TL/DL A/C No./Credit Card No</span>
         <table>
           <tr>
-            {% for n in account.ac_no %}
+            {% for n in account.ac_no|slice:":19" %}
               <td style="padding: 4px;">{{n}}</td>
               {% endfor %}
             </tr>
           </table>
         
-          <p>Name <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{account.name}}</span>
-          </p>
-          <p>Tel No <span style="border-bottom: 1px solid #000; padding-bottom: 3px">{{account.telephone}}</span>
-          </p>
-          
-        <p>Email ID _______________________________________</p>
+          <p>Name: <span style="border-bottom: 1px solid #000; width: 260px;display: inline-block; padding-bottom: 3px">{{account.name}}</span></p>
+          <p>Tel No: <span style="border-bottom: 1px solid #000; width: 255px;display: inline-block; padding-bottom: 3px">{{account.telephone}}</span></p>
+          <p>Email ID: <span style="border-bottom: 1px solid #000; width: 245px;display: inline-block; padding-bottom: 3px">{{account.email}}</span></p>
         <!-- <p>Rupees in Words ___________________________________</p> -->
         <p>Rupees in Words: {{amount_in_words|safe}}</p>
         <table class="blank">
@@ -221,11 +219,11 @@
               Cash/Cheque No/Date & Name of Bank & Branch</td>
           </tr>
           <tr>
-            <td style="padding-right:100px"></td>
+            <td style="padding-right:100px">{% if cheque %}{{cheque.1}}{% endif %}</td>
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            <td>{% if cheque %}{{cheque.0}}{% endif %}</td>
             <td></td>
           </tr>
           <tr>

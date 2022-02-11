@@ -15,13 +15,19 @@ class SBIBankView(View):
 
     def post(self, request, *args, **kwargs): 
         account = Account.objects.get(id=request.POST['acno'])       
+        
+        cheque= None
+        if request.POST['chequeamount'] and request.POST['chequenumber']:
+            cheque=[request.POST['chequeamount'], request.POST['chequenumber']]
+
+        
         cfile = ChallanFile.objects.create(
-            amount=request.POST['amount'],
+            amount=int(request.POST['amount'])+ int(cheque[0]) if cheque else request.POST['amount'],
             # account_id = request.POST['acno'],
             name = account.name,
             cash_deposit= request.POST['denominations'],
         )
-        pdf_gen = GeneratePDF(cfile,account, request.build_absolute_uri()[:-1])
+        pdf_gen = GeneratePDF(cfile,account,cheque, request.build_absolute_uri()[:-1])
         pdf_gen.generate()
         messages.success(request, 'Challan generated successfully!')
         return redirect('sbi_challan')
@@ -65,14 +71,15 @@ class OtherBankView(View):
 
 class AccountEditView(View):
     def post(self,request, *args, **kwargs):
-        print(request.POST,kwargs["pk"])
         ac = Account.objects.get(pk=kwargs["pk"])
         ac.name = request.POST['name']
 
         ac.ac_no = request.POST['ac_no']
         ac.branch = request.POST['branch']
         ac.telephone = request.POST['telephone']
+        ac.email = request.POST['email']
         ac.pan = request.POST['pan']
+
         ac.save()
         messages.success(request, f'Account "{ac.ac_no}" updated successfully!')
         return JsonResponse({'status':'success', 'data':[]})
@@ -85,29 +92,27 @@ class AccountEditView(View):
         
 
 class AccountView(View):
-    
-
     def post(self,request):
         form = AccountForm(request.POST)
         if form.is_valid():
             item = form.save()
-            message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}
+            message = {'status':'success', 'data':{
+                'id':item.id,'text':item.name,'account':item.ac_no,
+                'branch':item.branch,'telephone':item.telephone,
+                'pan':item.pan,'email':item.email,}}
         else:
             message = {'status':'failed', 'data':str(form.errors)}
-
         return JsonResponse(message)
 
 
 class OtherbankAccountView(View):
     def post(self,request):
-        
         form = OtherbankAccountForm(request.POST)
         if form.is_valid():
             item = form.save()
             message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}
         else:
             message = {'status':'failed', 'data':str(form.errors)}
-
         return JsonResponse(message)
 
 class IFSCView(View):
