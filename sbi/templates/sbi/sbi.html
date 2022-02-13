@@ -47,7 +47,12 @@
       </div>
     </div>
     <div id="amount_table"></div><br>
-    
+    <div class="row mb-3">
+      <label for="amount" class="col-sm-2 col-form-label">Amount</label>
+      <div class="col-sm-6">
+        <input class="form-control readonly" id="txtamount" name="amount" value="0">
+      </div>
+    </div>
     <!-- <div class="row mb-3">
       <div class="col-sm-2">
         <div class="form-check">
@@ -93,12 +98,7 @@
         </div>
       </div>
     </div>
-    <div class="row mb-3">
-      <label for="amount" class="col-sm-2 col-form-label">Amount</label>
-      <div class="col-sm-6">
-        <input class="form-control readonly" id="txtamount" name="amount" required>
-      </div>
-    </div>
+    
     <div class="d-grid gap-2 col-6 mx-auto">
       <button class="btn btn-success" type="submit">Generate Challan</button>
     </div>
@@ -256,7 +256,7 @@
   [false, "5 x", ""], [false, "coins", ""],];
   var amount_table = new Handsontable(container, {
     columns: [
-      { data: 1, type: "text" },
+      { data: 1, type: "text", readOnly: true },
       { data: 2, type: "numeric" },
       // { data: 3, readOnly: true }, { data: 4, readOnly: true },
     ],
@@ -287,11 +287,11 @@
         // is float  
         $('#txtamount').val(total);
         if (total === 0) {
-          $('#txtamount').val('');
+          $('#txtamount').val('0');
         }
         $('#txt_denom').val(JSON.stringify(amts));
       } else {
-        $('#txtamount').val('');
+        $('#txtamount').val('0');
       }
 
     },
