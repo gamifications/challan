@@ -23,11 +23,12 @@ def amt_to_words(amt):
         '''
     return str_amt
 class GeneratePDF:
-    def __init__(self, cfile,account,cheque, url):
+    def __init__(self, cfile,account,cheque,depositor, url):
         self.url = url 
         self.account = account
         self.cheque= cheque
         self.cfile = cfile
+        self.depositor=depositor
 
     def generate(self):
         denominations = json.loads(self.cfile.cash_deposit)
@@ -51,6 +52,7 @@ class GeneratePDF:
             'account':self.account,
             'denom_total':self.cfile.amount - int(self.cheque[0]) if self.cheque else self.cfile.amount, # display denomiations total
             'cheque':self.cheque,
+            'depositor':self.depositor,
             'date': self.cfile.uploading_date, # timezone.now(),
             'amount_in_words': amt_to_words(self.cfile.amount),
             'url':  self.url, # strip last /

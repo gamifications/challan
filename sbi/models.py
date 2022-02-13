@@ -22,7 +22,9 @@ class ChallanFile(models.Model):
     
     def get_denominations(self):
         return self.cash_deposit.split(',')
-
+class Depositor(models.Model):
+    name = models.CharField(max_length=100)
+    adaar = models.CharField(max_length=100)
 
 class OtherBankAccount(models.Model):
     ifsc = models.CharField(max_length=100)

@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 
 
-from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount
+from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount, Depositor
 from .forms import AccountForm, OtherbankAccountForm
 from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
@@ -28,7 +28,8 @@ class SBIBankView(View):
             name = account.name,
             cash_deposit= request.POST['denominations'],
         )
-        pdf_gen = GeneratePDF(cfile,account,cheque, request.build_absolute_uri()[:-1])
+        depositor = Depositor.objects.filter(id=request.POST['depositor']).first()
+        pdf_gen = GeneratePDF(cfile,account,cheque,depositor, request.build_absolute_uri()[:-1])
         pdf_gen.generate()
         messages.success(request, 'Challan generated successfully!')
         return redirect('sbi_challan')
@@ -36,6 +37,7 @@ class SBIBankView(View):
     def get(self, request):
         context = {
             'files':ChallanFile.objects.order_by('-uploading_date')[:5],
+            'depositors': Depositor.objects.all(),
             'accounts':[{
                 'id': ac.id,
                 'text': ac.name,
@@ -57,6 +59,10 @@ class DeleteChallanView(View):
         messages.warning(request, 'Challan file deleted successfully!')
         return redirect('sbi_challan')
 
+class addDepositorView(View):
+    def post(self, request):
+        dep = Depositor.objects.create(name=request.POST['name'], adaar=request.POST['adaar'])
+        return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
 
 @method_decorator([login_required], name='dispatch')
 class OtherBankView(View):

@@ -115,6 +115,7 @@
               <td><span class="handwritten">00</span></td>
             </tr>
           </table>
+          <small>SWO / Passing Officer</small>
         </div>
       </td>
       <td class="noborder">
@@ -182,6 +183,11 @@
             <td>-</td>
           </tr>
         </table>
+        <div style="border: 1px solid black; font-size: 7px; margin-top: 5px;">
+          1. All Cheques must be crossed<br>
+          2. Please mention your A/c No and Name on back of the Cheque<br>
+          3. Please use seperate slips for Cash Deposit, Outstation Cheques and Local Cheques
+        </div>
       </td>
       <td class="noborder">
         <!-- 
@@ -239,7 +245,13 @@
           {% endif %}
           <tr>
             <td style="border-bottom-style: hidden; border-left-style: hidden;">
-              <div style="text-align: right;">Total</div>
+              
+              
+                <span style="font-size: 7px; padding: 5px;">
+                  Transaction ID <br>
+                  SWO Passing Officer
+                </span>
+                Total
             </td>
             <td></td>
             <td></td>
@@ -248,7 +260,24 @@
             <td><span class="handwritten">00</span></td>
           </tr>
         </table>
-        <p><small>Name of Depositor Aadhaar No. Signature of Depositor</small></p>
+        <table class="noborder">
+          <tr>
+            <td style="border:none; padding-right: 10px;">
+              <small> Name of Depositor</small>
+            </td>
+            <td style="border:none; padding-right: 10px">
+              <small>Aadhaar No.</small>
+            </td>
+            <td style="border:none;">
+              <small>Signature of Depositor</small>
+            </td>
+          </tr>
+          <tr>
+            <td style="border:none;"><small>{{depositor.name}}</small></td>
+            <td style="border:none;"><small>{{depositor.adaar}}</small></td>
+            <td style="border:none;"></td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>

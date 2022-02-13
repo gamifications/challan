@@ -46,10 +46,11 @@
         </div>
       </div>
     </div>
+    <p style="text-align: left;"><strong>Cash Deposit</strong> </p>
     <div id="amount_table"></div><br>
     <div class="row mb-3">
-      <label for="amount" class="col-sm-2 col-form-label">Amount</label>
-      <div class="col-sm-6">
+      <label for="amount" class="col-sm-3 col-form-label">Cash Amount</label>
+      <div class="col-sm-3">
         <input class="form-control readonly" id="txtamount" name="amount" value="0">
       </div>
     </div>
@@ -99,7 +100,29 @@
       </div>
     </div>
     
-    <div class="d-grid gap-2 col-6 mx-auto">
+
+    <div class="row mb-3">
+      <label for="depositor" class="col-sm-2 col-form-label">Depositor:</label>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-8 col-sm-10">
+            <select name="depositor" id="depositorSelect" class="form-control">
+              <option value=''>--Select--</option>
+              {% for depositor in depositors %} 
+              <option value='{{depositor.id}}'>{{depositor.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-4 col-sm-2">
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+              data-bs-target="#depositorModal"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
       <button class="btn btn-success" type="submit">Generate Challan</button>
     </div>
   </form>
@@ -232,6 +255,46 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- 
+  DEPOSITOR MODAL
+  =================================================================================
+-->
+
+<div class="modal fade" id="depositorModal" tabindex="-1" aria-labelledby="depositorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="depositorModalLabel">Edit Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="frm_depositor">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Adaar:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="adaar">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_add_depositor">Add Depositor</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 
@@ -245,7 +308,7 @@
     e.preventDefault();
   });
 
-  // $("#editModal").on('show.bs.modal', function () {
+  // $("#depositorModal").on('show.bs.modal', function () {
   //     console.log('Show Modal called!');
   // });
 
@@ -398,6 +461,35 @@
 
     });
   });
+
+  $("#btn_add_depositor").click(function (e) {
+    e.preventDefault();
+    let addDepositor = $('#depositorModal');
+    let datas = $('#frm_depositor').serializeArray();  
+    $.ajax({
+      type: "POST",
+      url: `/add_depositor/`,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+      },
+      data: datas
+    }).done(function (resp) {
+      if (resp['status'] == 'success') {
+        // update depositor select box
+        $('#depositorSelect').append($('<option>', {
+            value: resp['id'],
+            text: resp['name']
+        }));
+        addDepositor.modal('hide');
+        $("#frm_depositor").trigger("reset");
+
+      } else {
+        addDepositor.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
+  
 /*
 <!--
       <div class="modal-body">
