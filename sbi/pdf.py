@@ -1,5 +1,5 @@
 from weasyprint import HTML
-# import inflect
+import num2words # import inflect
 import json
 from textwrap import wrap
 
@@ -10,7 +10,6 @@ from django.conf import settings
 from django.core.files import File
 
 def amt_to_words(amt):
-    import num2words
     amount_to_words = num2words.num2words(amt, lang='en_IN')
 
     # inf_engine = inflect.engine()

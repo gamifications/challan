@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -46,6 +47,16 @@ class SBIBankView(View):
             } for ac in Account.objects.order_by('name')],
         }
         return render(request,'sbi/sbi.html',context)
+
+
+
+class DeleteChallanView(View):
+    def post(self, request, *args, **kwargs): 
+        cfile = ChallanFile.objects.get(id=request.POST['challanid'])
+        cfile.delete()
+        messages.warning(request, 'Challan file deleted successfully!')
+        return redirect('sbi_challan')
+
 
 @method_decorator([login_required], name='dispatch')
 class OtherBankView(View):

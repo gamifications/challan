@@ -20,15 +20,24 @@
         <tr>
             <th colspan="5">Challans(Latest 5)</th>
         </tr>
-        <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th></tr>
+        <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th><th></th></tr>
         {% for file in files %}
         <tr>
             <td>{{file.id}}</td>
             <td>{% if otherbank %} {{file.account.name}}{% else %}{{file.name}}{% endif %}</td>
             <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>
             <td>{{file.uploading_date}}</td>
-            <td><a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}"><img src="{% static 'pdf.svg' %}" style="height:30px"> Download</a></td>
-            
+            <td>
+                <a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}">
+                    <img src="{% static 'pdf.svg' %}" style="height:30px"> Download
+                </a>
+            </td>
+            <td>
+                <form method="post" action="{% url 'delete_challan' %}">{% csrf_token %}
+                    <input type="hidden" value="{{file.id}}" name="challanid">
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
         <tr>
