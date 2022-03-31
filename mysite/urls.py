@@ -25,7 +25,8 @@ from sbi import views #  import home
 urlpatterns = [
     path('', views.SBIBankView.as_view(), name='sbi_challan'),
     path('delete_challan/', views.DeleteChallanView.as_view(), name='delete_challan'),
-    path('add_depositor/', views.addDepositorView.as_view()),
+    path('depositor/add/', views.addDepositorView.as_view()),
+    path('depositor/delete/<int:pk>/', views.deleteDepositorView.as_view()),
     
     path('otherbanks/', views.OtherBankView.as_view(), name='otherbank_challan'),
 

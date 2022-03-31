@@ -29,10 +29,16 @@
     </div>
     <div class="row mb-3">
       <label class="col-sm-2 col-form-label">A/C No.</label>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <input type="text" class="form-control" disabled id="txt_acno">
       </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-danger" id="btn_delete_ac"><i class="fa fa-trash fa-lg"></i></button>
+          
+      </div>
     </div>
+
+
     <div class="row mb-3">
       <label for="amount" class="col-sm-2 col-form-label">Amount</label>
       <div class="col-sm-6">
@@ -99,10 +105,22 @@
               </div>
             </div>
           </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Bank:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="id_bank" name="bank">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="id_branch" name="branch">
+            </div>
+          </div>
 
-        </form>
-        <hr>
         <div id="bank_details"></div>
+        </form>
+        
 
       </div>
       <div class="modal-footer">
@@ -141,14 +159,31 @@
       type: "POST",
       url: "{% url 'ajax_ifsc' %}",
       data: { 'ifsc': $("#txt_ifsc").val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'}
-    }).done(function (resp) { $("#bank_details").html(resp); });
+    }).done(function (msg) { 
+      if (msg['status'] == 'success'){
+        let resp = msg['data'];
+        // bank_details = `
+        //   <ul class="list-group">
+        //     <li class="list-group-item active" aria-current="true">${resp['bank']}</li>
+        //     <li class="list-group-item">Branch: ${resp['branch']}</li>
+        //     <li class="list-group-item">City: ${resp['city']}</li>
+        //   </ul>`;
+          $("#id_bank").val(resp['bank']);
+          $("#id_branch").val(resp['branch']);
+
+      } else  {
+        $("#bank_details").html(`<div class="alert alert-danger" role="alert">
+            <strong> IFSC Code not found.</strong> Please check IFSC code again!
+          </div>`);
+      }
+      // $("#bank_details").html(bank_details); 
+    });
   });
 
   $("#btn_add_account").click(function (e) {
     e.preventDefault();
     let addperiod = $('#exampleModal');
     let datas = $('#frm_addaccount').serializeArray();
-    // $('#frm_addperiod :input').attr('disabled', true);    
     $.ajax({
       type: "POST",
       url: "{% url 'otherbankaccount' %}",
@@ -163,6 +198,7 @@
         $('#sel_account').select2({ data: ac_data });
         $("#sel_account").val(newdata['id']).trigger('change');
         $("#frm_addaccount").trigger("reset");
+        $("#bank_details").html(); 
       } else {
         addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
       }
@@ -170,6 +206,25 @@
     });
   });
 
+  $("#btn_delete_ac").click(function (e) {
+    let ac_id = $("#sel_account").val();
+    if (ac_id) {
+      // ajax delete account
+      $.ajax({
+        type: "DELETE",
+        url: `/account/${ac_id}/?ac=other`,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      }).done(function (resp) {
+        // refresh 
+        location.reload();
+      });
+      
+    } else {
+      alert('Please select an account.')
+    }
+  });
 </script>
 
 {% endblock %}

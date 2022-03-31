@@ -64,15 +64,23 @@ class addDepositorView(View):
         dep = Depositor.objects.create(name=request.POST['name'], adaar=request.POST['adaar'])
         return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
 
+class deleteDepositorView(View):
+    def delete(self, request, *args, **kwargs):
+        query = Depositor.objects.get(pk=kwargs["pk"])
+        query.delete()
+        messages.warning(request, f'Depositor "{query.name}" deleted successfully!')
+        return HttpResponse("Deleted!")
 @method_decorator([login_required], name='dispatch')
 class OtherBankView(View):
 
     def post(self, request):
+        account = OtherBankAccount.objects.get(id=request.POST['acno'])
         amt = request.POST['amount']
         cfile = OtherBankChallanFile.objects.create(
             amount=amt,
+            name=account.name
         )
-        pdf_gen = GenerateOtherBanksPDF(cfile, request.build_absolute_uri('/')[:-1])
+        pdf_gen = GenerateOtherBanksPDF(cfile,account, request.build_absolute_uri('/')[:-1])
         pdf_gen.generate()
         messages.success(request, 'Challan generated successfully!')
         return redirect('otherbank_challan')
@@ -101,8 +109,11 @@ class AccountEditView(View):
         messages.success(request, f'Account "{ac.ac_no}" updated successfully!')
         return JsonResponse({'status':'success', 'data':[]})
     
-    def delete(self, request, *args, **kwargs):                                                 
-        query = Account.objects.get(pk=kwargs["pk"])
+    def delete(self, request, *args, **kwargs):
+        if request.GET.get('ac') and request.GET['ac']=='other':
+            query = OtherBankAccount.objects.get(pk=kwargs["pk"])
+        else:
+            query = Account.objects.get(pk=kwargs["pk"])
         query.delete()
         messages.warning(request, f'Account "{query.ac_no}" deleted successfully!')
         return HttpResponse("Deleted!")
@@ -124,6 +135,7 @@ class AccountView(View):
 
 class OtherbankAccountView(View):
     def post(self,request):
+        print(request.POST)
         form = OtherbankAccountForm(request.POST)
         if form.is_valid():
             item = form.save()
@@ -138,6 +150,8 @@ class IFSCView(View):
         r = requests.get(f'https://bank-apis.justinclicks.com/API/V1/IFSC/{request.POST["ifsc"]}/')
         try:
             resp = r.json()
+            message = {'status':'success', 'data':{'bank':resp['BANK'],'branch':resp['BRANCH'],'city': resp['CITY']}}
         except:
-            resp = None
-        return render(request, 'sbi/bank_details.html', {'bank': resp})
+            message = {'status':'failed'}
+        return JsonResponse(message)
+        # return render(request, 'sbi/bank_details.html', {'bank': resp})

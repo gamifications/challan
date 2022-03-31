@@ -24,7 +24,7 @@
         {% for file in files %}
         <tr>
             <td>{{file.id}}</td>
-            <td>{% if otherbank %} {{file.account.name}}{% else %}{{file.name}}{% endif %}</td>
+            <td>{{file.name}}</td>
             <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>
             <td>{{file.uploading_date}}</td>
             <td>
@@ -40,9 +40,9 @@
             </td>
         </tr>
         {% endfor %}
-        <tr>
+        <!-- <tr>
             <th colspan="5"><a class="btn btn-primary">Show More</a></th>
-        </tr>
+        </tr> -->
         </table>
     </div>
 </div>

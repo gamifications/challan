@@ -9,13 +9,13 @@ from django.conf import settings
 
 from django.core.files import File
 
-def amt_to_words(amt):
+def amt_to_words(amt, wrap_length=30):
     amount_to_words = num2words.num2words(amt, lang='en_IN')
 
     # inf_engine = inflect.engine()
     # amount_to_words = inf_engine.number_to_words(amt)
     str_amt = ''
-    for wrap_amt in wrap(f'{amount_to_words} Rupees Only',30):
+    for wrap_amt in wrap(f'{amount_to_words} Rupees Only',wrap_length):
         str_amt+= f'''
             <span style="border-bottom: 1px solid #000;">
                 {wrap_amt.title()}
@@ -65,15 +65,18 @@ class GeneratePDF:
         self.cfile.challanfile.save(f'{self.cfile.id}.pdf', File(open(f'{settings.MEDIA_ROOT}/output/challan.pdf','rb')))
 
 class GenerateOtherBanksPDF:
-    def __init__(self, cfile, url):
+    def __init__(self, cfile,account, url):
         self.url = url 
         self.cfile = cfile
+        self.account = account
 
     def generate(self):
         context = {
             'file': self.cfile,
+            'account':self.account,
             'date': timezone.now(),
             'amount_in_words': amt_to_words(self.cfile.amount),
+            'amount_in_words_no_wrap': amt_to_words(self.cfile.amount,100),
             'url':  self.url, # strip last /
         }
         

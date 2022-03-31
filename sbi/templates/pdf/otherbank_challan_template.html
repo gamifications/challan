@@ -29,16 +29,9 @@
 
   .noborder {
     border: none !important;
-    padding: 20px;
+    
   }
 
-  .center-table {
-    min-width: 300px
-  }
-
-  .center-table td {
-    text-align: center;
-  }
 
   #overlay {
     position: absolute;
@@ -47,47 +40,51 @@
 
   span.mybox {
     display: inline;
-    /* the default for span */
-    /* width: 100px;
-  height: 100px; */
-    padding-left: 15px;
+    padding: 2px 10px;
     margin-left: 50px;
     border: 1px solid #000;
-
   }
 </style>
 
 <body>
-  <table class="noborder">
+  <table style="width: 100%;padding: 20px;" class="noborder">
     <tr>
-      <td style="border:none;border-right: 1px dashed black; padding:20px">
+      <td style="border:none;border-right: 1px dashed black; padding:10px; width: 300px;">
         <div class="bordered">
           <small>Customer foil</small>
           <div style="font-weight: bold;">
             <img src="{{url}}{% static 'sbi.svg' %}" style="height:16px">
             <span style="font-size: 18px; font-weight: 900;">SBI <small>State Bank of India</small></span>
           </div>
-          <p>Branch: ....................................</p>
-          <p>Date: {{date.day}}/{{date.month}}/{{date.year}}</p>
-          <p>Recieved ₹ {{file.amount}}</p>
+          <p>Branch:</p>
+          <p>Date <span style="border-bottom: 1px dashed #000; width: 260px;display: inline-block;">
+            <span class="handwritten">{{date.day}}/{{date.month}}/{{date.year}}</span></span>
+          </p>
+          <p>Recieved ₹<span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+            <span class="handwritten">{{file.amount}}</span>
+          </p>
           <p>From:..................................</p>
           <p style="line-height: 1;">For remittance of NEFT/RTGS by way of (i)<br>
             Transfer (only NEFT), (ii) Cash (only NEFT),<br> (iii) Cheque (NEFT/RTGS) using</p>
           <p>Cheque No.......</p>
           <p>Favouring.......</p>
-          <p>A/c No.......</p>
-          <p>IFSC Code.......</p>
+          <p>A/c No <span style="border-bottom: 1px dashed #000; width: 230px;display: inline-block;">
+            <span class="handwritten">{{account.ac_no}}</span></span></p>
+          <p>IFSC Code <span style="border-bottom: 1px dashed #000; width: 220px;display: inline-block;">
+            <span class="handwritten">{{account.ifsc}}</span></span></p>
           <p>Beneficiary Bank & Branch.......</p>
-          <p>Amount ₹ {{file.amount}}</p>
+          <p>Amount ₹ <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+            <span class="handwritten">{{file.amount}}</span></span></p>
           <p>Bank's Charges ₹0</p>
-          <p>Total ₹ {{file.amount}}</p>
+          <p>Total ₹ <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+            <span class="handwritten">{{file.amount}}</span></span></p>
           <p>(Rupees {{amount_in_words|safe}}</p>
           <p>For offic use,</p>
           <p>UTR No....... Branch Manager</p>
 
         </div>
       </td>
-      <td class="noborder" colspan="2" style="width: 66%;">
+      <td class="noborder" style="padding:30px">
         <!-- coloumn 2-->
         <h3 style="text-align: center; text-decoration: underline;">Application for RTGS / NEFT Remittance</h3>
 
@@ -97,29 +94,52 @@
           <span style="font-size: 18px;">SBI </span><span style="font-size: 12px;">State Bank of India</span>
         </div>
         <div style="font-size: 14px; font-weight: bold; color:dodgerblue; margin-left: 140px;">
-          इडुक्की - ७००२७ <br><span style="font-size: 10px;">IDUKKI - 70027</span>
-          <span style="font-size:medium;font-weight:normal; color:black;">
-            <span class="mybox"></span> NEFT <span class="mybox"></span> RTGS
-            <span style="margin-left: 20px;">Date: {{date.day}}/{{date.month}}/{{date.year}}</span>
+          <!-- इडुक्की - ७००२७ --><br><span style="font-size: 10px;">IDUKKI - 70027</span>
+          <span style="font-weight:normal; color:black;">
+            <span class="mybox">&#10003;</span> NEFT <span class="mybox"></span> RTGS
+            <span style="float:right;font-size: 12px">Date: {{date.day}}/{{date.month}}/{{date.year}}</span>
           </span>
         </div>
-        <p>Branch: .............. Branch Code:.........</p>
-        <p>Please remit the sum of ₹ {{file.amount}}(₹{{amount_in_words|safe}})</p>
+        <p>Branch: .............. <span style="float:right">Branch Code:.........</span></p>
+        <p>Please remit the sum of ₹ {{file.amount}}(₹{{amount_in_words_no_wrap|safe}}</p>
         <p>By debiting my/our Account No................................ by way of (i) Transfer<br>
           (only NEFT, (ii) Cash (Only NEFT), (iii) Cheque (NEFT/RTGS) using cheque No...........dated....<br>
           for the total amount including your charges, as per details given below.
         </p>
-        <p>Name of the Baneficiary...............................</p>
-        <p>Beneficiary Bank & Branch ........................IFSC Code........</p>
-        <p>Beneficiary Account No.</p>
-        <p>Confirm Account No.</p>
-        <p>Amount (in words) {{amount_in_words|safe}}</p>
-        <p>Amount (in figures)₹ {{file.amount}}Charges ₹ 0 Total ₹ {{file.amount}}</p>
-        <p>Name of Applicant...................</p>
-        <p>Address ................</p>
+        <p>Name of the Baneficiary <span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
+          <span class="handwritten">{{account.name}}</span></span></p>
+        <p>Beneficiary Bank & Branch <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+          <span class="handwritten">{{account.bank}}, {{account.branch}}</span></span> IFSC Code <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+            <span class="handwritten">{{account.ifsc}}</span></span></p>
+        <table class="noborder">
+          <tr><td class="noborder">Beneficiary Account No.</td><td class="noborder"><table>
+            <tr>{% for n in account.ac_no|slice:":19" %}
+            <td style="padding: 4px;"><span class="handwritten">{{n}}</span></td>
+            {% endfor %}</tr></table></td></tr>
+          <tr><td class="noborder">Confirm Account No.</td><td class="noborder">
+            <table>
+              <tr>{% for n in account.ac_no|slice:":19" %}
+              <td style="padding: 4px;"><span class="handwritten">{{n}}</span></td>
+              {% endfor %}</tr></table>
+          </td></tr>
+        </table>
+        <p>Amount (in words) {{amount_in_words_no_wrap|safe}}</p>
+        <p>Amount (in figures)₹ <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
+          <span class="handwritten">{{file.amount}}</span></span>
+          Charges
+          <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
+            <span class="handwritten">₹ 0</span></span>
+            Total ₹ 
+          <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
+            <span class="handwritten">{{file.amount}}</span></span>
+        </p>
+        <p>Name of Applicant<span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
+          <span class="handwritten">xx</span></span></p>
+        <p>Address<span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
+          <span class="handwritten">xx</span></span></p>
         <p>Mobile / Tel No............... PAN No................</p>
         <p>Scroll No ................. UTR No. & Date .............</p>
-        <p>(Please see conditions on the reverse)  Signature of Applicant(s)............</p>
+        <p>(Please see conditions on the reverse)  <span style="float:right">Signature of Applicant(s)............</span></p>
 
 
       </td>

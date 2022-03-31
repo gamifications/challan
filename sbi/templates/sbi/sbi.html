@@ -105,7 +105,7 @@
       <label for="depositor" class="col-sm-2 col-form-label">Depositor:</label>
       <div class="col-sm-10">
         <div class="row">
-          <div class="col-8 col-sm-10">
+          <div class="col-8 col-sm-9">
             <select name="depositor" id="depositorSelect" class="form-control">
               <option value=''>--Select--</option>
               {% for depositor in depositors %} 
@@ -113,10 +113,14 @@
               {% endfor %}
             </select>
           </div>
-          <div class="col-4 col-sm-2">
-            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+          <div class="col-4 col-sm-3">
+            <div class="btn-group" role="group" aria-label="Delete and Add Button group">
+              <button type="button" class="btn btn-danger" id="btn_delete_depositor"><i class="fa fa-trash fa-lg"></i></button>
+              <button class="btn btn-success" type="button" data-bs-toggle="modal"
               data-bs-target="#depositorModal"><i class="fa fa-plus"></i></button>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -410,7 +414,6 @@
     
   });
   
-
   $("#btn_add_account").click(function (e) {
     e.preventDefault();
     let addperiod = $('#exampleModal');
@@ -468,7 +471,7 @@
     let datas = $('#frm_depositor').serializeArray();  
     $.ajax({
       type: "POST",
-      url: `/add_depositor/`,
+      url: `/depositor/add/`,
       beforeSend: function(xhr) {
         xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
       },
@@ -489,6 +492,29 @@
 
     });
   });
+
+  $("#btn_delete_depositor").click(function (e) {
+    let depositor_id = $("#depositorSelect").val();
+    if (depositor_id) {
+      // ajax delete account
+      $.ajax({
+        type: "DELETE",
+        url: `/depositor/delete/${depositor_id}/`,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      }).done(function (resp) {
+        // refresh 
+        location.reload();
+      });
+      
+    } else {
+      alert('Please select a Depositor.')
+    }
+    
+  });
+  
+  
   
 /*
 <!--
