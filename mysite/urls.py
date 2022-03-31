@@ -27,6 +27,8 @@ urlpatterns = [
     path('delete_challan/', views.DeleteChallanView.as_view(), name='delete_challan'),
     path('depositor/add/', views.addDepositorView.as_view()),
     path('depositor/delete/<int:pk>/', views.deleteDepositorView.as_view()),
+    path('applicant/add/', views.addApplicantView.as_view()),
+    path('applicant/delete/<int:pk>/', views.deleteApplicantView.as_view()),
     
     path('otherbanks/', views.OtherBankView.as_view(), name='otherbank_challan'),
 

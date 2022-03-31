@@ -65,15 +65,20 @@ class GeneratePDF:
         self.cfile.challanfile.save(f'{self.cfile.id}.pdf', File(open(f'{settings.MEDIA_ROOT}/output/challan.pdf','rb')))
 
 class GenerateOtherBanksPDF:
-    def __init__(self, cfile,account, url):
+    def __init__(self, cfile,account,cheque,applicant,neft_rtgs, url):
         self.url = url 
         self.cfile = cfile
+        self.cheque= cheque
         self.account = account
-
+        self.applicant=applicant
+        self.neft_rtgs = neft_rtgs
     def generate(self):
         context = {
             'file': self.cfile,
             'account':self.account,
+            'cheque':self.cheque,
+            'applicant':self.applicant,
+            'neft_rtgs':self.neft_rtgs,
             'date': timezone.now(),
             'amount_in_words': amt_to_words(self.cfile.amount),
             'amount_in_words_no_wrap': amt_to_words(self.cfile.amount,100),

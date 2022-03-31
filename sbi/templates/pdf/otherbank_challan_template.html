@@ -37,7 +37,9 @@
     position: absolute;
     z-index: 100;
   }
-
+  .handwritten {
+    color: #ae2012;
+  }
   span.mybox {
     display: inline;
     padding: 2px 10px;
@@ -66,7 +68,8 @@
           <p>From:..................................</p>
           <p style="line-height: 1;">For remittance of NEFT/RTGS by way of (i)<br>
             Transfer (only NEFT), (ii) Cash (only NEFT),<br> (iii) Cheque (NEFT/RTGS) using</p>
-          <p>Cheque No.......</p>
+          <p>Cheque No<span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+            <span class="handwritten">{{cheque.0}}</span></span></p>
           <p>Favouring.......</p>
           <p>A/c No <span style="border-bottom: 1px dashed #000; width: 230px;display: inline-block;">
             <span class="handwritten">{{account.ac_no}}</span></span></p>
@@ -96,17 +99,21 @@
         <div style="font-size: 14px; font-weight: bold; color:dodgerblue; margin-left: 140px;">
           <!-- इडुक्की - ७००२७ --><br><span style="font-size: 10px;">IDUKKI - 70027</span>
           <span style="font-weight:normal; color:black;">
-            <span class="mybox">&#10003;</span> NEFT <span class="mybox"></span> RTGS
+            <span class="mybox">{% if neft_rtgs == 'neft' %}&#10003;{% endif %}</span> NEFT 
+            <span class="mybox">{% if neft_rtgs == 'rtgs' %}&#10003;{% endif %}</span> RTGS
             <span style="float:right;font-size: 12px">Date: {{date.day}}/{{date.month}}/{{date.year}}</span>
           </span>
         </div>
         <p>Branch: .............. <span style="float:right">Branch Code:.........</span></p>
         <p>Please remit the sum of ₹ {{file.amount}}(₹{{amount_in_words_no_wrap|safe}}</p>
-        <p>By debiting my/our Account No................................ by way of (i) Transfer<br>
-          (only NEFT, (ii) Cash (Only NEFT), (iii) Cheque (NEFT/RTGS) using cheque No...........dated....<br>
+        <p>By debiting my/our Account No <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
+          <span class="handwritten">{{applicant.account}}</span></span> by way of (i) Transfer (only NEFT), <br>(ii) Cash (Only NEFT), (iii) Cheque (NEFT/RTGS) 
+          using cheque No <span style="border-bottom: 1px dashed #000; width: 90px;display: inline-block;">
+            <span class="handwritten">{{cheque.0}}</span></span>dated <span style="border-bottom: 1px dashed #000; width: 70px;display: inline-block;">
+              <span class="handwritten">{{cheque.1}}</span></span><br>
           for the total amount including your charges, as per details given below.
         </p>
-        <p>Name of the Baneficiary <span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
+        <p>Name of the Baneficiary <span style="border-bottom: 1px dashed #000; width: 500px;display: inline-block;">
           <span class="handwritten">{{account.name}}</span></span></p>
         <p>Beneficiary Bank & Branch <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
           <span class="handwritten">{{account.bank}}, {{account.branch}}</span></span> IFSC Code <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
@@ -133,10 +140,10 @@
           <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
             <span class="handwritten">{{file.amount}}</span></span>
         </p>
-        <p>Name of Applicant<span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
-          <span class="handwritten">xx</span></span></p>
-        <p>Address<span style="border-bottom: 1px dashed #000; width: 456px;display: inline-block;">
-          <span class="handwritten">xx</span></span></p>
+        <p>Name of Applicant <span style="border-bottom: 1px dashed #000; width: 540px;display: inline-block;">
+          <span class="handwritten">{{applicant.name}}</span></span></p>
+        <p>Address <span style="border-bottom: 1px dashed #000; width: 586px;display: inline-block;">
+          <span class="handwritten">{{applicant.address}}</span></span></p>
         <p>Mobile / Tel No............... PAN No................</p>
         <p>Scroll No ................. UTR No. & Date .............</p>
         <p>(Please see conditions on the reverse)  <span style="float:right">Signature of Applicant(s)............</span></p>

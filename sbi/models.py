@@ -32,8 +32,8 @@ class OtherBankAccount(models.Model):
     name = models.CharField(max_length=100)
     bank = models.CharField(max_length=100)
     branch = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=100)
-    pan = models.CharField(max_length=100, blank=True)
+    # telephone = models.CharField(max_length=100)
+    # pan = models.CharField(max_length=100, blank=True)
 
 class OtherBankChallanFile(models.Model):
     # account = models.ForeignKey('OtherBankAccount', on_delete=models.CASCADE, null=True)
@@ -44,4 +44,8 @@ class OtherBankChallanFile(models.Model):
 
     def __str__(self) -> str:
         return f'{self.uploading_date}'
-    
+
+class Applicant(models.Model):
+    name = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=300, blank=True)
+    account = models.CharField(max_length=100, blank=True)

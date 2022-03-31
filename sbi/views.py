@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 
 
-from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount, Depositor
+from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount, Depositor, Applicant
 from .forms import AccountForm, OtherbankAccountForm
 from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
@@ -74,18 +74,24 @@ class deleteDepositorView(View):
 class OtherBankView(View):
 
     def post(self, request):
+        cheque= None
+        if request.POST['chequenumber'] and request.POST['chequedate']:
+            cheque=[request.POST['chequenumber'], request.POST['chequedate']]
+        neft_rtgs = request.POST['neft_rtgs']
         account = OtherBankAccount.objects.get(id=request.POST['acno'])
         amt = request.POST['amount']
         cfile = OtherBankChallanFile.objects.create(
             amount=amt,
             name=account.name
         )
-        pdf_gen = GenerateOtherBanksPDF(cfile,account, request.build_absolute_uri('/')[:-1])
+        applicant = Applicant.objects.filter(id=request.POST['applicant']).first()
+        pdf_gen = GenerateOtherBanksPDF(cfile,account,cheque,applicant,neft_rtgs, request.build_absolute_uri('/')[:-1])
         pdf_gen.generate()
         messages.success(request, 'Challan generated successfully!')
         return redirect('otherbank_challan')
     def get(self, request):
         context = {
+            'applicants': Applicant.objects.all(),
             'files':OtherBankChallanFile.objects.order_by('-uploading_date')[:5],
             'otherbank':True,
             'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.order_by('name')],
@@ -155,3 +161,17 @@ class IFSCView(View):
             message = {'status':'failed'}
         return JsonResponse(message)
         # return render(request, 'sbi/bank_details.html', {'bank': resp})
+
+
+class addApplicantView(View):
+    def post(self, request):
+        dep = Applicant.objects.create(name=request.POST['name'], 
+            address=request.POST['address'], account=request.POST['account'])
+        return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
+
+class deleteApplicantView(View):
+    def delete(self, request, *args, **kwargs):
+        query = Applicant.objects.get(pk=kwargs["pk"])
+        query.delete()
+        messages.warning(request, f'Applicant "{query.name}" deleted successfully!')
+        return HttpResponse("Deleted!")

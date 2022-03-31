@@ -38,6 +38,43 @@
       </div>
     </div>
 
+    <div class="row mb-3">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Cheque 
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              
+
+              <div class="row mb-3">
+                <label for="chequenumber" class="col-sm-4 col-form-label">Cheque Number</label>
+                <div class="col-sm-6">
+                  <input type="number" class="form-control" id="txtchequenumber" name="chequenumber">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="chequedate" class="col-sm-4 col-form-label">Cheque Date</label>
+                <div class="col-sm-6">
+                  <input type="date" class="form-control" id="txtchequedate" name="chequedate">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="neft_rtgs" id="inlineRadio1" value="neft" checked>
+      <label class="form-check-label" for="inlineRadio1">NEFT</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="neft_rtgs" id="inlineRadio2" value="rtgs">
+      <label class="form-check-label" for="inlineRadio2">RTGS</label>
+    </div>
 
     <div class="row mb-3">
       <label for="amount" class="col-sm-2 col-form-label">Amount</label>
@@ -45,6 +82,30 @@
         <input class="form-control" id="txtamount" name="amount" required>
       </div>
     </div>
+    <div class="row mb-3">
+      <label for="applicant" class="col-sm-2 col-form-label">Applicant:</label>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-8 col-sm-9">
+            <select name="applicant" id="applicantSelect" class="form-control">
+              <option value=''>--Select--</option>
+              {% for applicant in applicants %} 
+              <option value='{{applicant.id}}'>{{applicant.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-4 col-sm-3">
+            <div class="btn-group" role="group" aria-label="Delete and Add Button group">
+              <button type="button" class="btn btn-danger" id="btn_delete_applicant"><i class="fa fa-trash fa-lg"></i></button>
+              <button class="btn btn-success" type="button" data-bs-toggle="modal"
+              data-bs-target="#applicantModal"><i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Generate Challan</button>
   </form>
 </div>
@@ -82,7 +143,7 @@
           </div>
 
 
-          <div class="row mb-3">
+          <!-- <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Tel No.:</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="telephone">
@@ -93,7 +154,7 @@
             <div class="col-sm-10">
               <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
             </div>
-          </div>
+          </div> -->
 
 
           <div class="row mb-3">
@@ -126,6 +187,50 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 
+  Applicant MODAL
+  =================================================================================
+-->
+
+<div class="modal fade" id="applicantModal" tabindex="-1" aria-labelledby="applicantModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="applicantModalLabel">Edit Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="frm_applicant">{% csrf_token %}
+          <div class="errormsg"></div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label">Name:</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="name">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label">Address:</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="address">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-4 col-form-label">Account No:</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="account">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn_add_applicant">Add Applicant</button>
       </div>
     </div>
   </div>
@@ -224,6 +329,56 @@
     } else {
       alert('Please select an account.')
     }
+  });
+
+
+  $("#btn_add_applicant").click(function (e) {
+    e.preventDefault();
+    let addapplicant = $('#applicantModal');
+    let datas = $('#frm_applicant').serializeArray();  
+    $.ajax({
+      type: "POST",
+      url: `/applicant/add/`,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+      },
+      data: datas
+    }).done(function (resp) {
+      if (resp['status'] == 'success') {
+        // update applicant select box
+        $('#applicantSelect').append($('<option>', {
+            value: resp['id'],
+            text: resp['name']
+        }));
+        addapplicant.modal('hide');
+        $("#frm_applicant").trigger("reset");
+
+      } else {
+        addapplicant.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
+
+  $("#btn_delete_applicant").click(function (e) {
+    let applicant_id = $("#applicantSelect").val();
+    if (applicant_id) {
+      // ajax delete account
+      $.ajax({
+        type: "DELETE",
+        url: `/applicant/delete/${applicant_id}/`,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      }).done(function (resp) {
+        // refresh 
+        location.reload();
+      });
+      
+    } else {
+      alert('Please select a applicant.')
+    }
+    
   });
 </script>
 
