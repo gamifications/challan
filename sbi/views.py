@@ -53,11 +53,18 @@ class SBIBankView(View):
 
 
 class DeleteChallanView(View):
-    def post(self, request, *args, **kwargs): 
-        cfile = ChallanFile.objects.get(id=request.POST['challanid'])
-        cfile.delete()
+    def post(self, request, *args, **kwargs):
+        
+        if request.POST.get('otherbank'):
+            OtherBankChallanFile.objects.get(id=request.POST['challanid']).delete()
+            url = 'otherbank_challan'
+        else:
+            ChallanFile.objects.get(id=request.POST['challanid']).delete()
+            url = 'sbi_challan'
+        
         messages.warning(request, 'Challan file deleted successfully!')
-        return redirect('sbi_challan')
+        return redirect(url)
+        
 
 class addDepositorView(View):
     def post(self, request):

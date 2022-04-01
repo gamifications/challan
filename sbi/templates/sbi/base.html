@@ -34,6 +34,7 @@
             </td>
             <td>
                 <form method="post" action="{% url 'delete_challan' %}">{% csrf_token %}
+                    {% if otherbank %}<input type="hidden" value="1" name="otherbank">{% endif %}
                     <input type="hidden" value="{{file.id}}" name="challanid">
                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                 </form>
