@@ -93,13 +93,14 @@ class OtherBankView(View):
         neft_rtgs = request.POST['neft_rtgs']
         account = OtherBankAccount.objects.get(id=request.POST['acno'])
         amt = request.POST['amount']
+        bankcharge = request.POST.get('bankcharge',0)
         cfile = OtherBankChallanFile.objects.create(
             amount=amt,
             name=account.name
         )
         applicant = Applicant.objects.filter(id=request.POST['applicant']).first()
         pdf_gen = GenerateOtherBanksPDF(cfile,account,cheque,applicant,neft_rtgs, request.build_absolute_uri('/')[:-1])
-        pdf_gen.generate()
+        pdf_gen.generate(bankcharge)
         messages.success(request, 'Challan generated successfully!')
         return redirect('otherbank_challan')
     def get(self, request):
@@ -154,7 +155,6 @@ class AccountView(View):
 
 class OtherbankAccountView(View):
     def post(self,request):
-        print(request.POST)
         form = OtherbankAccountForm(request.POST)
         if form.is_valid():
             item = form.save()

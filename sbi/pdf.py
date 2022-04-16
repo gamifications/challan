@@ -77,16 +77,19 @@ class GenerateOtherBanksPDF:
         self.account = account
         self.applicant=applicant
         self.neft_rtgs = neft_rtgs
-    def generate(self):
+    def generate(self,bankcharge):
+        total_amt = int(bankcharge)+int(self.cfile.amount)
         context = {
             'file': self.cfile,
             'account':self.account,
             'cheque':self.cheque,
             'applicant':self.applicant,
             'neft_rtgs':self.neft_rtgs,
+            'bankcharge':bankcharge,
             'date': timezone.now(),
-            'amount_in_words': amt_to_words(self.cfile.amount),
-            'amount_in_words_no_wrap': amt_to_words(self.cfile.amount,100),
+            'total_amt':total_amt,
+            'amount_in_words': amt_to_words(total_amt),
+            'amount_in_words_no_wrap': amt_to_words(total_amt,100),
             'url':  self.url, # strip last /
         }
         

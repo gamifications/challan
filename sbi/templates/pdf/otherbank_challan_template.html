@@ -65,25 +65,29 @@
           <p>Recieved ₹<span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
             <span class="handwritten">{{file.amount}}</span>
           </p>
-          <p>From:..................................</p>
+          <p>From:<span style="border-bottom: 1px dashed #000; width: 230px;display: inline-block;">
+            <span class="handwritten">.</span></span></p>
           <p style="line-height: 1;">For remittance of NEFT/RTGS by way of (i)<br>
             Transfer (only NEFT), (ii) Cash (only NEFT),<br> (iii) Cheque (NEFT/RTGS) using</p>
           <p>Cheque No<span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
-            <span class="handwritten">{{cheque.0}}</span></span></p>
-          <p>Favouring.......</p>
+            <span class="handwritten">. {{cheque.0}}</span></span></p>
+          <p>Favouring <span style="border-bottom: 1px dashed #000; width: 225px;display: inline-block;">
+            <span class="handwritten">.</span></span></p>
           <p>A/c No <span style="border-bottom: 1px dashed #000; width: 230px;display: inline-block;">
             <span class="handwritten">{{account.ac_no}}</span></span></p>
           <p>IFSC Code <span style="border-bottom: 1px dashed #000; width: 220px;display: inline-block;">
             <span class="handwritten">{{account.ifsc}}</span></span></p>
-          <p>Beneficiary Bank & Branch.......</p>
+          <p>Beneficiary Bank & Branch <span style="border-bottom: 1px dashed #000; width: 270px;display: inline-block;">
+            <span class="handwritten">{{account.bank}}, {{account.branch}}</span></span></p>
           <p>Amount ₹ <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
             <span class="handwritten">{{file.amount}}</span></span></p>
-          <p>Bank's Charges ₹0</p>
+          <p>Bank's Charges ₹ <span style="border-bottom: 1px dashed #000; width: 170px;display: inline-block;">
+            <span class="handwritten">{{bankcharge}}</span></span></p>
           <p>Total ₹ <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
-            <span class="handwritten">{{file.amount}}</span></span></p>
+            <span class="handwritten">{{total_amt}}</span></span></p>
           <p>(Rupees {{amount_in_words|safe}}</p>
           <p>For offic use,</p>
-          <p>UTR No....... Branch Manager</p>
+          <p>UTR No....... <span style="float:right">Branch Manager</span></p>
 
         </div>
       </td>
@@ -104,13 +108,13 @@
             <span style="float:right;font-size: 12px">Date: {{date.day}}/{{date.month}}/{{date.year}}</span>
           </span>
         </div>
-        <p>Branch: .............. <span style="float:right">Branch Code:.........</span></p>
-        <p>Please remit the sum of ₹ {{file.amount}}(₹{{amount_in_words_no_wrap|safe}}</p>
+        <p>Branch: <span style="float:right">Branch Code:.........</span></p>
+        <p>Please remit the sum of <span class="handwritten">₹ {{total_amt}}(₹{{amount_in_words_no_wrap|safe}}</span></p>
         <p>By debiting my/our Account No <span style="border-bottom: 1px dashed #000; width: 226px;display: inline-block;">
           <span class="handwritten">{{applicant.account}}</span></span> by way of (i) Transfer (only NEFT), <br>(ii) Cash (Only NEFT), (iii) Cheque (NEFT/RTGS) 
-          using cheque No <span style="border-bottom: 1px dashed #000; width: 90px;display: inline-block;">
-            <span class="handwritten">{{cheque.0}}</span></span>dated <span style="border-bottom: 1px dashed #000; width: 70px;display: inline-block;">
-              <span class="handwritten">{{cheque.1}}</span></span><br>
+          using cheque No <span style="border-bottom: 1px dashed #000; width: 120px;display: inline-block;">
+            <span class="handwritten">. {{cheque.0}}</span></span>dated <span style="border-bottom: 1px dashed #000; width: 70px;display: inline-block;">
+              <span class="handwritten">. {{cheque.1}}</span></span><br>
           for the total amount including your charges, as per details given below.
         </p>
         <p>Name of the Baneficiary <span style="border-bottom: 1px dashed #000; width: 500px;display: inline-block;">
@@ -133,21 +137,28 @@
         <p>Amount (in words) {{amount_in_words_no_wrap|safe}}</p>
         <p>Amount (in figures)₹ <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
           <span class="handwritten">{{file.amount}}</span></span>
-          Charges
+          Charges ₹ 
           <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
-            <span class="handwritten">₹ 0</span></span>
+            <span class="handwritten">{{bankcharge}}</span></span>
             Total ₹ 
           <span style="border-bottom: 1px dashed #000; width: 150px;display: inline-block;">
-            <span class="handwritten">{{file.amount}}</span></span>
+            <span class="handwritten">{{total_amt}}</span></span>
         </p>
-        <p>Name of Applicant <span style="border-bottom: 1px dashed #000; width: 540px;display: inline-block;">
+        <p>Name of Applicant <span style="border-bottom: 1px dashed #000; width: 560px;display: inline-block;">
           <span class="handwritten">{{applicant.name}}</span></span></p>
-        <p>Address <span style="border-bottom: 1px dashed #000; width: 586px;display: inline-block;">
+        <p>Address <span style="border-bottom: 1px dashed #000; width: 620px;display: inline-block;">
           <span class="handwritten">{{applicant.address}}</span></span></p>
-        <p>Mobile / Tel No............... PAN No................</p>
-        <p>Scroll No ................. UTR No. & Date .............</p>
-        <p>(Please see conditions on the reverse)  <span style="float:right">Signature of Applicant(s)............</span></p>
-
+        <p>Mobile / Tel No <span style="border-bottom: 1px dashed #000; width: 270px;display: inline-block;">
+            <span class="handwritten">. {{account.mobile}}</span></span>
+            PAN No <span style="border-bottom: 1px dashed #000; width: 250px;display: inline-block;">
+                <span class="handwritten">. {{account.pan}}</span></span></p>
+        <p>Scroll No <span style="border-bottom: 1px dashed #000; width: 270px;display: inline-block;">
+            <span class="handwritten">.</span></span> UTR No. & Date 
+            <span style="border-bottom: 1px dashed #000; width: 250px;display: inline-block;">
+                <span class="handwritten">.</span></span>
+        </p>
+        <p>(Please see conditions on the reverse)  <span style="float:right">Signature of Applicant(s) </span></p>
+        <span style="float:right">{{applicant.name}}</span>
 
       </td>
     </tr>

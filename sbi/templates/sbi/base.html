@@ -20,7 +20,7 @@
         Challans(Latest 5)
         <table class="table table-bordered">
         <thead>
-        <tr><th>Name</th><th>Amount</th><th>Created Date/Time</th><th>link</th><th></th></tr>
+        <tr><td>Name</td><td>Amount</td><td>Created Date/Time</td><td>PDF Download</td><td></td></tr>
         </thead>
         {% for file in files %}
         <tr{% if messages and forloop.counter == 1 %} style="font-weight:bold;"{%endif%}>

@@ -14,7 +14,7 @@ class ChallanFile(models.Model):
     name = models.CharField(max_length=100, blank=True)
     cash_deposit = models.CharField(max_length=100) # '20,10, 500
     amount = models.FloatField(default=0)
-    challanfile = models.FileField(upload_to = 'chalan/')
+    challanfile = models.FileField(upload_to = 'chalan/sbibank/')
     uploading_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -32,14 +32,14 @@ class OtherBankAccount(models.Model):
     name = models.CharField(max_length=100)
     bank = models.CharField(max_length=100)
     branch = models.CharField(max_length=100)
-    # telephone = models.CharField(max_length=100)
-    # pan = models.CharField(max_length=100, blank=True)
+    mobile = models.CharField(max_length=100, blank=True)
+    pan = models.CharField(max_length=100, blank=True)
 
 class OtherBankChallanFile(models.Model):
     # account = models.ForeignKey('OtherBankAccount', on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100, blank=True)
     amount = models.FloatField(default=0)
-    challanfile = models.FileField(upload_to = 'chalan/')
+    challanfile = models.FileField(upload_to = 'chalan/otherbank/')
     uploading_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:

@@ -48,8 +48,6 @@
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              
-
               <div class="row mb-3">
                 <label for="chequenumber" class="col-sm-4 col-form-label">Cheque Number</label>
                 <div class="col-sm-6">
@@ -78,8 +76,12 @@
 
     <div class="row mb-3">
       <label for="amount" class="col-sm-2 col-form-label">Amount</label>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <input class="form-control" id="txtamount" name="amount" required>
+      </div>
+      <label for="amount" class="col-sm-3 col-form-label">Bank Charge</label>
+      <div class="col-sm-3">
+        <input class="form-control" name="bankcharge" required>
       </div>
     </div>
     <div class="row mb-3">
@@ -87,7 +89,7 @@
       <div class="col-sm-10">
         <div class="row">
           <div class="col-8 col-sm-9">
-            <select name="applicant" id="applicantSelect" class="form-control">
+            <select name="applicant" id="applicantSelect" class="form-control" required>
               <option value=''>--Select--</option>
               {% for applicant in applicants %} 
               <option value='{{applicant.id}}'>{{applicant.name}}</option>
@@ -101,12 +103,12 @@
               data-bs-target="#applicantModal"><i class="fa fa-plus"></i></button>
             </div>
           </div>
-
         </div>
       </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Generate Challan</button>
+    </div><hr>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button class="btn btn-primary" type="submit">Generate Challan</button>
+      </div>
   </form>
 </div>
 
@@ -143,10 +145,10 @@
           </div>
 
 
-          <!-- <div class="row mb-3">
+          <div class="row mb-3">
             <label class="col-sm-2 col-form-label">Tel No.:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="telephone">
+              <input type="text" class="form-control" name="mobile">
             </div>
           </div>
           <div class="row mb-3">
@@ -154,7 +156,7 @@
             <div class="col-sm-10">
               <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
             </div>
-          </div> -->
+          </div>
 
 
           <div class="row mb-3">
