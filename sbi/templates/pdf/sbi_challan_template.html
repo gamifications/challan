@@ -74,45 +74,36 @@
           </p>
           Amount <table class="blank">
             <tr>
-              <td style="min-width:160px; text-align: right;"><span class="handwritten">{{file.amount}}</span></td>
-              <td><span class="handwritten">00</span></td>
+              <td style="min-width:160px; text-align: right;"><span class="handwritten">{{amount}}</span></td>
             </tr>
           </table>
           <p>Rupees in Words: <span class="handwritten">{{amount_in_words|safe}}</span></p>
           <table class="blank">
             <tr>
-              <td colspan="6" style="background-color: black;color: white;">
+              <td colspan="2" style="background-color: black;color: white;">
                 Cash/Cheque No/Date & Name of Bank & Branch</td>
             </tr>
             {% if cheque %}
           <tr>
             <td style="padding-right:100px"><span class="handwritten">Cheque: {{cheque.1}}</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="handwritten">{{cheque.0}}</span></td>
-            <td></td>
+            
+            <td><span class="handwritten" style="float:right;">{{cheque.0}}</span></td>
           </tr>
           {% endif %}
           {% if denom_total %}
           <tr>
             <td style="padding-right:100px"><span class="handwritten">Cash:</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="handwritten">{{denom_total}}</span></td>
-            <td></td>
+            
+            <td><span class="handwritten" style="float:right;">{{denom_total}}</span></td>
           </tr>
           {% endif %}
             <tr>
               <td style="border-bottom-style: hidden; border-left-style: hidden;">
                 <div style="text-align: right;">Total</div>
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><span class="handwritten">{{file.amount}}</span></td>
-              <td><span class="handwritten">00</span></td>
+              
+              <td><span class="handwritten" style="float:right;">{{amount}}</span></td>
+              
             </tr>
           </table>
           <small>SWO / Passing Officer</small>
@@ -220,45 +211,33 @@
         <p>Rupees in Words: <span class="handwritten">{{amount_in_words|safe}}</span></p>
         <table class="blank">
           <tr>
-            <td colspan="6" style="background-color: black;color: white;">
+            <td colspan="2" style="background-color: black;color: white;">
               Cash/Cheque No/Date & Name of Bank & Branch</td>
           </tr>
           {% if cheque %}
           <tr>
-            <td style="padding-right:100px"><span class="handwritten">Cheque: {{cheque.1}}</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="handwritten">{{cheque.0}}</span></td>
-            <td></td>
+            <td><span class="handwritten">Cheque: {{cheque.1}}</span></td>            
+            <td><span class="handwritten" style="float:right;">{{cheque.0}}</span></td>
           </tr>
           {% endif %}
+          
           {% if denom_total %}
           <tr>
             <td style="padding-right:100px"><span class="handwritten">Cash:</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="handwritten">{{denom_total}}</span></td>
-            <td></td>
+            
+            <td><span class="handwritten" style="float:right;">{{denom_total}}</span></td>
           </tr>
           {% endif %}
-          <tr>
-            <td style="border-bottom-style: hidden; border-left-style: hidden;">
-              
-              
+            <tr>
+              <td style="border-bottom-style: hidden; border-left-style: hidden;">
                 <span style="font-size: 7px; padding: 5px;">
                   Transaction ID <br>
                   SWO Passing Officer
                 </span>
                 Total
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><span class="handwritten">{{file.amount}}</span></td>
-            <td><span class="handwritten">00</span></td>
-          </tr>
+              <td><span class="handwritten" style="float:right;">{{amount}}</span></td>
+            </tr>
         </table>
         <table class="noborder">
           <tr>
@@ -266,7 +245,7 @@
               <small> Name of Depositor</small>
             </td>
             <td style="border:none; padding-right: 10px">
-              <small>Aadhaar No.</small>
+              <small></small>
             </td>
             <td style="border:none;">
               <small>Signature of Depositor</small>

@@ -43,3 +43,7 @@ urlpatterns = [
     path('ajax_ifsc/', views.IFSCView.as_view(), name='ajax_ifsc'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler404 = 'sbi.views.custom_page_not_found_view'
+handler500 = 'sbi.views.custom_error_view'

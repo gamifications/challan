@@ -11,6 +11,12 @@ from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount
 from .forms import AccountForm, OtherbankAccountForm
 from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
+def custom_page_not_found_view(request, exception):
+    return render(request, "404.html", {})
+
+def custom_error_view(request, exception=None):
+    return render(request, "500.html", {})
+
 @method_decorator([login_required], name='dispatch')
 class SBIBankView(View):
 

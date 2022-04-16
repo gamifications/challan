@@ -14,15 +14,16 @@
 {% endfor %}
 <div class="card text-center">
     {% block extraextra_content %}{% endblock %}
-    <div class="card-footer">
+    <hr>
+    <div class="card-body">
       
         <table class="table table-bordered">
         <tr>
-            <th colspan="5">Challans(Latest 5)</th>
+            <td colspan="6">Challans(Latest 5)</td>
         </tr>
-        <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th><th></th></tr>
+        <!-- <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th><th></th></tr> -->
         {% for file in files %}
-        <tr>
+        <tr{% if messages and forloop.counter == 1 %} style="font-weight:bold;"{%endif%}>
             <td>{{file.id}}</td>
             <td>{{file.name}}</td>
             <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>

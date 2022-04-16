@@ -2,7 +2,7 @@ from weasyprint import HTML
 import num2words # import inflect
 import json
 from textwrap import wrap
-
+import locale
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -31,6 +31,8 @@ class GeneratePDF:
         self.depositor=depositor
 
     def generate(self):
+
+        locale.setlocale(locale.LC_MONETARY, 'en_IN')
         denominations = json.loads(self.cfile.cash_deposit)
         denoms = []
         notes = [2000,500,200,100,50,20,10,5,1]
@@ -45,15 +47,18 @@ class GeneratePDF:
                 item['amt']=n*notes[i]
 
             denoms.append(item)
-
         
+        denom_total = self.cfile.amount - int(self.cheque[0]) if self.cheque else self.cfile.amount
+        if self.cheque:
+            self.cheque[0] = locale.currency(int(self.cheque[0]), grouping=True)
         context = {
             'file': self.cfile,
             'account':self.account,
-            'denom_total':self.cfile.amount - int(self.cheque[0]) if self.cheque else self.cfile.amount, # display denomiations total
+            'denom_total':locale.currency(int(denom_total), grouping=True) if denom_total else 0, # display denomiations total
             'cheque':self.cheque,
             'depositor':self.depositor,
             'date': self.cfile.uploading_date, # timezone.now(),
+            'amount':locale.currency(int(self.cfile.amount), grouping=True),
             'amount_in_words': amt_to_words(self.cfile.amount),
             'url':  self.url, # strip last /
             'denoms': denoms,
