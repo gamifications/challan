@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% block extracss %}
 
     {% block extraextracss %}{% endblock %}
@@ -16,18 +17,18 @@
     {% block extraextra_content %}{% endblock %}
     <hr>
     <div class="card-body">
-      
+        Challans(Latest 5)
         <table class="table table-bordered">
-        <tr>
-            <td colspan="6">Challans(Latest 5)</td>
-        </tr>
-        <!-- <tr><th>#</th><th>Name</th><th>Amount</th><th>Date/Time</th><th>link</th><th></th></tr> -->
+        <thead>
+        <tr><th>Name</th><th>Amount</th><th>Created Date/Time</th><th>link</th><th></th></tr>
+        </thead>
         {% for file in files %}
         <tr{% if messages and forloop.counter == 1 %} style="font-weight:bold;"{%endif%}>
-            <td>{{file.id}}</td>
+            <!-- <td>{{file.id}}</td> -->
             <td>{{file.name}}</td>
             <td style="text-align: right;">{{file.amount|floatformat:2}}₹</td>
-            <td>{{file.uploading_date}}</td>
+            <td>{{file.uploading_date}}<br>
+                <small>{{file.uploading_date|naturaltime}}</small></td>
             <td>
                 <a href="{% if file.challanfile %}{{file.challanfile.url}}{% endif%}">
                     <img src="{% static 'pdf.svg' %}" style="height:30px"> Download
