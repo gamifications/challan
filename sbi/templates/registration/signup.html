@@ -1,0 +1,39 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block registration %}
+      <h1 class="h3 mb-3 fw-normal"><img src="{% static 'sbi.svg' %}" style="height:30px"> Please sign up</h1>
+      
+      {% if form.errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul>
+          {% if form.errors.username %}
+          <li>Error in Email field </li>
+          
+          {% elif form.errors.password1 %}
+          <li>Error in Password field </li>
+          {% elif form.errors.password2 %}
+          <li>Error in Password confirmation field </li>
+          {% else %}
+          {{form.errors}}
+          {% endif %}
+        </ul>  
+      </div>
+      {% endif %}
+      <div class="form-floating">
+        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" 
+          name="username" value='{{form.username.value|default_if_none:""}}'>
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password1">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword2" placeholder="Password confirmation" name="password2">
+        <label for="floatingPassword2">Password confirmation</label>
+      </div>
+  
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+      <hr>or already have an account <a href="{% url 'login' %}">Login</a>
+
+    {% endblock %}

@@ -11,6 +11,23 @@ from .models import ChallanFile, Account, OtherBankChallanFile, OtherBankAccount
 from .forms import AccountForm, OtherbankAccountForm
 from .pdf import GeneratePDF, GenerateOtherBanksPDF
 
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('sbi_challan')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
 def custom_page_not_found_view(request, exception):
     return render(request, "404.html", {})
 
@@ -29,6 +46,7 @@ class SBIBankView(View):
 
         
         cfile = ChallanFile.objects.create(
+            user=request.user,
             amount=int(request.POST['amount'])+ int(cheque[0]) if cheque else request.POST['amount'],
             # account_id = request.POST['acno'],
             name = account.name,
@@ -42,8 +60,8 @@ class SBIBankView(View):
     
     def get(self, request):
         context = {
-            'files':ChallanFile.objects.order_by('-uploading_date')[:5],
-            'depositors': Depositor.objects.all(),
+            'files':ChallanFile.objects.filter(user=request.user).order_by('-uploading_date')[:5],
+            'depositors': Depositor.objects.filter(user=request.user).order_by('name'),
             'accounts':[{
                 'id': ac.id,
                 'text': ac.name,
@@ -52,34 +70,35 @@ class SBIBankView(View):
                 'telephone':ac.telephone,
                 'pan':ac.pan,
                 'email':ac.email,
-            } for ac in Account.objects.order_by('name')],
+            } for ac in Account.objects.filter(user=request.user).order_by('name')],
         }
         return render(request,'sbi/sbi.html',context)
 
 
-
+@method_decorator([login_required], name='dispatch')
 class DeleteChallanView(View):
     def post(self, request, *args, **kwargs):
         
         if request.POST.get('otherbank'):
-            OtherBankChallanFile.objects.get(id=request.POST['challanid']).delete()
+            OtherBankChallanFile.objects.get(user=request.user,id=request.POST['challanid']).delete()
             url = 'otherbank_challan'
         else:
-            ChallanFile.objects.get(id=request.POST['challanid']).delete()
+            ChallanFile.objects.get(user=request.user,id=request.POST['challanid']).delete()
             url = 'sbi_challan'
         
         messages.warning(request, 'Challan file deleted successfully!')
         return redirect(url)
         
-
+@method_decorator([login_required], name='dispatch')
 class addDepositorView(View):
     def post(self, request):
-        dep = Depositor.objects.create(name=request.POST['name'], adaar=request.POST['adaar'])
+        dep = Depositor.objects.create(user=request.user,name=request.POST['name'], adaar=request.POST['adaar'])
         return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
 
+@method_decorator([login_required], name='dispatch')
 class deleteDepositorView(View):
     def delete(self, request, *args, **kwargs):
-        query = Depositor.objects.get(pk=kwargs["pk"])
+        query = Depositor.objects.get(user=request.user,pk=kwargs["pk"])
         query.delete()
         messages.warning(request, f'Depositor "{query.name}" deleted successfully!')
         return HttpResponse("Deleted!")
@@ -91,32 +110,34 @@ class OtherBankView(View):
         if request.POST['chequenumber'] and request.POST['chequedate']:
             cheque=[request.POST['chequenumber'], request.POST['chequedate']]
         neft_rtgs = request.POST['neft_rtgs']
-        account = OtherBankAccount.objects.get(id=request.POST['acno'])
+        account = OtherBankAccount.objects.get(user=request.user,id=request.POST['acno'])
         amt = request.POST['amount']
         bankcharge = request.POST.get('bankcharge',0)
         cfile = OtherBankChallanFile.objects.create(
+            user=request.user,
             amount=amt,
             name=account.name
         )
-        applicant = Applicant.objects.filter(id=request.POST['applicant']).first()
+        applicant = Applicant.objects.filter(user=request.user,id=request.POST['applicant']).first()
         pdf_gen = GenerateOtherBanksPDF(cfile,account,cheque,applicant,neft_rtgs, request.build_absolute_uri('/')[:-1])
         pdf_gen.generate(bankcharge)
         messages.success(request, 'Challan generated successfully!')
         return redirect('otherbank_challan')
     def get(self, request):
         context = {
-            'applicants': Applicant.objects.all(),
-            'files':OtherBankChallanFile.objects.order_by('-uploading_date')[:5],
+            'applicants': Applicant.objects.filter(user=request.user),
+            'files':OtherBankChallanFile.objects.filter(user=request.user).order_by('-uploading_date')[:5],
             'otherbank':True,
-            'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.order_by('name')],
+            'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.filter(user=request.user).order_by('name')],
         }
         return render(request,'sbi/other.html',context)
 
 
 
+@method_decorator([login_required], name='dispatch')
 class AccountEditView(View):
     def post(self,request, *args, **kwargs):
-        ac = Account.objects.get(pk=kwargs["pk"])
+        ac = Account.objects.get(user=request.user,pk=kwargs["pk"])
         ac.name = request.POST['name']
 
         ac.ac_no = request.POST['ac_no']
@@ -131,19 +152,22 @@ class AccountEditView(View):
     
     def delete(self, request, *args, **kwargs):
         if request.GET.get('ac') and request.GET['ac']=='other':
-            query = OtherBankAccount.objects.get(pk=kwargs["pk"])
+            query = OtherBankAccount.objects.get(user=request.user,pk=kwargs["pk"])
         else:
-            query = Account.objects.get(pk=kwargs["pk"])
+            query = Account.objects.get(user=request.user,pk=kwargs["pk"])
         query.delete()
         messages.warning(request, f'Account "{query.ac_no}" deleted successfully!')
         return HttpResponse("Deleted!")
         
 
+@method_decorator([login_required], name='dispatch')
 class AccountView(View):
     def post(self,request):
         form = AccountForm(request.POST)
         if form.is_valid():
-            item = form.save()
+            item = form.save(commit=False)
+            item.user = request.user
+            item.save()
             message = {'status':'success', 'data':{
                 'id':item.id,'text':item.name,'account':item.ac_no,
                 'branch':item.branch,'telephone':item.telephone,
@@ -153,11 +177,14 @@ class AccountView(View):
         return JsonResponse(message)
 
 
+@method_decorator([login_required], name='dispatch')
 class OtherbankAccountView(View):
     def post(self,request):
         form = OtherbankAccountForm(request.POST)
         if form.is_valid():
-            item = form.save()
+            item = form.save(commit=False)
+            item.user = request.user
+            item.save()
             message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}
         else:
             message = {'status':'failed', 'data':str(form.errors)}
@@ -176,15 +203,17 @@ class IFSCView(View):
         # return render(request, 'sbi/bank_details.html', {'bank': resp})
 
 
+@method_decorator([login_required], name='dispatch')
 class addApplicantView(View):
     def post(self, request):
-        dep = Applicant.objects.create(name=request.POST['name'], 
+        dep = Applicant.objects.create(user = request.user,name=request.POST['name'], 
             address=request.POST['address'], account=request.POST['account'])
         return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
 
+@method_decorator([login_required], name='dispatch')
 class deleteApplicantView(View):
     def delete(self, request, *args, **kwargs):
-        query = Applicant.objects.get(pk=kwargs["pk"])
+        query = Applicant.objects.get(user = request.user,pk=kwargs["pk"])
         query.delete()
         messages.warning(request, f'Applicant "{query.name}" deleted successfully!')
         return HttpResponse("Deleted!")
