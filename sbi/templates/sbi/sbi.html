@@ -150,39 +150,39 @@
         <form id="frm_addaccount">{% csrf_token %}
           <div class="errormsg"></div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Name:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="name">
+            <label class="col-sm-3 col-form-label">Name:*</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" name="name" required>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">A/C no:</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" name="ac_no"></textarea>
+            <label class="col-sm-3 col-form-label">A/C no:*</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" name="ac_no" required></textarea>
             </div>
           </div>
 
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Branch:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="branch">
+            <label class="col-sm-3 col-form-label">Branch:*</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" name="branch" required>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Tel No.:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 col-form-label">Tel No.:</label>
+            <div class="col-sm-9">
               <input type="text" class="form-control" name="telephone">
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Email:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 col-form-label">Email:</label>
+            <div class="col-sm-9">
               <input type="email" class="form-control" name="email">
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">PAN:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 col-form-label">PAN:</label>
+            <div class="col-sm-9">
               <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
             </div>
           </div>
@@ -191,6 +191,10 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+        <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingAccountDiv">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
       </div>
     </div>
   </div>
@@ -255,6 +259,10 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_edit_account">Update A/c</button>
+        <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingAccountEditDiv">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
       </div>
     </div>
   </div>
@@ -279,9 +287,9 @@
         <form id="frm_depositor">{% csrf_token %}
           <div class="errormsg"></div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Name:</label>
+            <label class="col-sm-2 col-form-label">Name:*</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" name="name">
+              <input type="text" class="form-control" name="name" required>
             </div>
           </div>
           <div class="row mb-3">
@@ -295,6 +303,10 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_add_depositor">Add Depositor</button>
+        <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingDepositorDiv">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
       </div>
     </div>
   </div>
@@ -307,6 +319,16 @@
 <script src="{% static 'handsontable/handsontable.full.min.js' %}"></script>
 <!-- <script src="{% static 'handsontable/hyperformula.full.min.js' %}"></script> -->
 <script type="text/javascript">
+
+    $("#exampleModal").on('show.bs.modal', function(event) {
+        $("#exampleModal").find('.errormsg').html('');
+    });
+
+    $("#depositorModal").on('show.bs.modal', function(event) {
+        $("#depositorModal").find('.errormsg').html('');
+    });
+    
+
   // https://stackoverflow.com/a/25694734
   $(".readonly").keydown(function (e) {
     e.preventDefault();
@@ -397,6 +419,7 @@
     let ac_id = $("#sel_account").val();
     if (ac_id) {
       // ajax delete account
+      $("#btn_delete_ac").prop('disabled', true);
       $.ajax({
         type: "DELETE",
         url: `/account/${ac_id}/`,
@@ -413,16 +436,33 @@
     }
     
   });
+
+  function account_loading_spinner(show_loading) {
+      // loading spinner
+      if (show_loading) {
+        $("#btn_add_account").hide()    // attr('disabled', true); 
+        $('#loadingAccountDiv').show() 
+      } else {
+
+      }
+  }
   
   $("#btn_add_account").click(function (e) {
     e.preventDefault();
     let addperiod = $('#exampleModal');
-    let datas = $('#frm_addaccount').serializeArray();  
+    let datas = $('#frm_addaccount').serializeArray();
+    
+    // loading spinner
+    $("#btn_add_account").hide();
+    $('#loadingAccountDiv').show();
     $.ajax({
       type: "POST",
       url: "{% url 'account' %}",
       data: datas
     }).done(function (resp) {
+        $("#btn_add_account").show();   // attr('disabled', true); 
+        $('#loadingAccountDiv').hide();
+
       if (resp['status'] == 'success') {
         addperiod.modal('hide');
         let newdata = resp['data'];
@@ -441,7 +481,11 @@
     e.preventDefault();
     let ac_id = $("#sel_account").val();
     let editAccount = $('#editModal');
-    let datas = $('#frm_editaccount').serializeArray();  
+    let datas = $('#frm_editaccount').serializeArray();
+
+    // loading spinner
+    $("#btn_edit_account").hide();
+    $('#loadingAccountEditDiv').show();
     $.ajax({
       type: "POST",
       url: `/account/${ac_id}/`,
@@ -450,6 +494,8 @@
         },
       data: datas
     }).done(function (resp) {
+        $("#btn_edit_account").show();
+        $('#loadingAccountEditDiv').hide();
       if (resp['status'] == 'success') {
         // refresh 
         location.reload();
@@ -469,6 +515,9 @@
     e.preventDefault();
     let addDepositor = $('#depositorModal');
     let datas = $('#frm_depositor').serializeArray();  
+
+    $("#btn_add_depositor").hide();
+    $('#loadingDepositorDiv').show();
     $.ajax({
       type: "POST",
       url: `/depositor/add/`,
@@ -477,6 +526,8 @@
       },
       data: datas
     }).done(function (resp) {
+        $("#btn_add_depositor").show();
+        $('#loadingDepositorDiv').hide();
       if (resp['status'] == 'success') {
         // update depositor select box
         $('#depositorSelect').append($('<option>', {
@@ -487,7 +538,7 @@
         $("#frm_depositor").trigger("reset");
 
       } else {
-        addDepositor.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+        addDepositor.find('.errormsg').html('<div class="alert alert-danger">' + resp['msg'] + '</div>');
       }
 
     });
@@ -496,6 +547,7 @@
   $("#btn_delete_depositor").click(function (e) {
     let depositor_id = $("#depositorSelect").val();
     if (depositor_id) {
+        $("#btn_delete_depositor").prop('disabled', true);
       // ajax delete account
       $.ajax({
         type: "DELETE",

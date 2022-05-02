@@ -165,6 +165,10 @@
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="IFSC code" name="ifsc" id="txt_ifsc">
                 <button type="submit" class="btn btn-secondary" id="btn_ifsc">Get Bank Details</button>
+                <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingIFSCDiv">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
               </div>
             </div>
           </div>
@@ -189,6 +193,10 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_add_account">Save A/c</button>
+        <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingAccountDiv">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
       </div>
     </div>
   </div>
@@ -211,7 +219,7 @@
         <form id="frm_applicant">{% csrf_token %}
           <div class="errormsg"></div>
           <div class="row mb-3">
-            <label class="col-sm-4 col-form-label">Name:</label>
+            <label class="col-sm-4 col-form-label">Name:*</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="name">
             </div>
@@ -233,6 +241,10 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="btn_add_applicant">Add Applicant</button>
+        <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingApplicantDiv">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
       </div>
     </div>
   </div>
@@ -257,16 +269,26 @@
     setTextboxes(e.params.data);
   });
 
-
-
+  $("#exampleModal").on('show.bs.modal', function(event) {
+        $("#exampleModal").find('.errormsg').html('');
+        $("#bank_details").html('');
+        
+    });
+    $("#applicantModal").on('show.bs.modal', function(event) {
+        $("#applicantModal").find('.errormsg').html('');
+    });
 
   $("#btn_ifsc").click(function (e) {
     e.preventDefault();
+    $("#btn_ifsc").hide();
+    $('#loadingIFSCDiv').show();
     $.ajax({
       type: "POST",
       url: "{% url 'ajax_ifsc' %}",
       data: { 'ifsc': $("#txt_ifsc").val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'}
     }).done(function (msg) { 
+        $("#btn_ifsc").show();
+    $('#loadingIFSCDiv').hide();
       if (msg['status'] == 'success'){
         let resp = msg['data'];
         // bank_details = `
@@ -291,12 +313,17 @@
     e.preventDefault();
     let addperiod = $('#exampleModal');
     let datas = $('#frm_addaccount').serializeArray();
+    $("#btn_add_account").hide();
+    $('#loadingAccountDiv').show();
     $.ajax({
       type: "POST",
       url: "{% url 'otherbankaccount' %}",
       data: datas
     }).done(function (resp) {
       // $('#frm_addevent :input').each(function(){this.disabled = false;});
+
+      $("#btn_add_account").show();
+        $('#loadingAccountDiv').hide();
       if (resp['status'] == 'success') {
         addperiod.modal('hide');
         let newdata = resp['data'];
@@ -317,6 +344,7 @@
     let ac_id = $("#sel_account").val();
     if (ac_id) {
       // ajax delete account
+      $("#btn_delete_ac").prop('disabled', true); 
       $.ajax({
         type: "DELETE",
         url: `/account/${ac_id}/?ac=other`,
@@ -337,7 +365,9 @@
   $("#btn_add_applicant").click(function (e) {
     e.preventDefault();
     let addapplicant = $('#applicantModal');
-    let datas = $('#frm_applicant').serializeArray();  
+    let datas = $('#frm_applicant').serializeArray();
+    $("#btn_add_applicant").hide();
+    $('#loadingApplicantDiv').show();
     $.ajax({
       type: "POST",
       url: `/applicant/add/`,
@@ -346,6 +376,8 @@
       },
       data: datas
     }).done(function (resp) {
+        $("#btn_add_applicant").show();
+        $('#loadingApplicantDiv').hide();
       if (resp['status'] == 'success') {
         // update applicant select box
         $('#applicantSelect').append($('<option>', {
@@ -356,7 +388,7 @@
         $("#frm_applicant").trigger("reset");
 
       } else {
-        addapplicant.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+        addapplicant.find('.errormsg').html('<div class="alert alert-danger">' + resp['msg'] + '</div>');
       }
 
     });
@@ -364,6 +396,7 @@
 
   $("#btn_delete_applicant").click(function (e) {
     let applicant_id = $("#applicantSelect").val();
+    $("#btn_delete_applicant").prop('disabled', true); 
     if (applicant_id) {
       // ajax delete account
       $.ajax({

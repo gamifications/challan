@@ -92,8 +92,11 @@ class DeleteChallanView(View):
 @method_decorator([login_required], name='dispatch')
 class addDepositorView(View):
     def post(self, request):
-        dep = Depositor.objects.create(user=request.user,name=request.POST['name'], adaar=request.POST['adaar'])
-        return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
+        if request.POST['name']:
+            dep = Depositor.objects.create(user=request.user,name=request.POST['name'], adaar=request.POST['adaar'])
+            return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
+        
+        return JsonResponse({'status':'failed', 'msg':'Name field is required.'})
 
 @method_decorator([login_required], name='dispatch')
 class deleteDepositorView(View):
@@ -174,6 +177,7 @@ class AccountView(View):
                 'pan':item.pan,'email':item.email,}}
         else:
             message = {'status':'failed', 'data':str(form.errors)}
+        
         return JsonResponse(message)
 
 
@@ -206,9 +210,13 @@ class IFSCView(View):
 @method_decorator([login_required], name='dispatch')
 class addApplicantView(View):
     def post(self, request):
-        dep = Applicant.objects.create(user = request.user,name=request.POST['name'], 
-            address=request.POST['address'], account=request.POST['account'])
-        return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
+        if request.POST['name']:
+            dep = Applicant.objects.create(user = request.user,name=request.POST['name'], 
+                address=request.POST['address'], account=request.POST['account'])
+            return JsonResponse({'status':'success', 'id':dep.id, 'name':dep.name})
+        return JsonResponse({'status':'failed', 'msg':'Name field is required.'})
+
+
 
 @method_decorator([login_required], name='dispatch')
 class deleteApplicantView(View):

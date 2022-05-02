@@ -7,7 +7,7 @@ class Account(models.Model):
     branch = models.CharField(max_length=100)
     ac_no = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=100, blank=True)
     pan = models.CharField(max_length=100, blank=True)
     email= models.EmailField(blank=True)
 
