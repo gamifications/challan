@@ -131,7 +131,18 @@ class OtherBankView(View):
             'applicants': Applicant.objects.filter(user=request.user),
             'files':OtherBankChallanFile.objects.filter(user=request.user).order_by('-uploading_date')[:5],
             'otherbank':True,
-            'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.filter(user=request.user).order_by('name')],
+            'accounts':[{
+                'id': ac.id,
+                'text': ac.name,
+                'account':ac.ac_no,
+                'bank': ac.bank,
+                'branch':ac.branch,
+                'mobile':ac.mobile,
+                'pan':ac.pan,
+                'ifsc':ac.ifsc,
+            } for ac in OtherBankAccount.objects.filter(user=request.user).order_by('name')],
+
+            # 'accounts':[{'id': ac.id,'text': ac.name,'account':ac.ac_no} for ac in OtherBankAccount.objects.filter(user=request.user).order_by('name')],
         }
         return render(request,'sbi/other.html',context)
 
@@ -194,6 +205,22 @@ class OtherbankAccountView(View):
             message = {'status':'failed', 'data':str(form.errors)}
         return JsonResponse(message)
 
+
+@method_decorator([login_required], name='dispatch')
+class OtherbankAccountEditView(View):
+    def post(self,request, *args, **kwargs):
+        ac = OtherBankAccount.objects.get(user=request.user,pk=kwargs["pk"])
+        ac.name = request.POST['name']
+
+        ac.ac_no = request.POST['ac_no']
+        ac.bank = request.POST['bank']
+        ac.branch = request.POST['branch']
+        ac.mobile = request.POST['mobile']
+        ac.pan = request.POST['pan']
+        ac.ifsc = request.POST['ifsc']
+        ac.save()
+        messages.success(request, f'Account "{ac.ac_no}" updated successfully!')
+        return JsonResponse({'status':'success', 'data':[]})
 class IFSCView(View):
     def post(self,request):
         import requests

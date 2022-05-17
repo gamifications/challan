@@ -41,6 +41,7 @@ urlpatterns = [
     path('account/<int:pk>/', views.AccountEditView.as_view(), name="account-detail"),
 
     path('otherbankaccount/', views.OtherbankAccountView.as_view(), name='otherbankaccount'),
+    path('otherbankaccount/<int:pk>/', views.OtherbankAccountEditView.as_view()),
     path('ajax_ifsc/', views.IFSCView.as_view(), name='ajax_ifsc'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

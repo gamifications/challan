@@ -20,6 +20,7 @@
               <option value=''>--Select--</option>
             </select>
           </div>
+          
           <div class="col-2 col-sm-1">
             <button class="btn btn-success btn-sm" type="button" data-bs-toggle="modal"
               data-bs-target="#exampleModal">+</button>
@@ -29,13 +30,20 @@
     </div>
     <div class="row mb-3">
       <label class="col-sm-2 col-form-label">A/C No.</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" disabled id="txt_acno">
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-8 col-sm-9">
+            <input type="text" class="form-control" disabled id="txt_acno">
+          </div>
+          <div class="col-4 col-sm-3">
+            <div class="btn-group" role="group" aria-label="Delete and Edit Button group">
+              <button type="button" class="btn btn-danger" id="btn_delete_ac"><i class="fa fa-trash fa-lg"></i></button>
+              <button type="button" class="btn btn-warning" id="btn_edit_ac"><i class="fa fa-edit fa-lg"></i></button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-danger" id="btn_delete_ac"><i class="fa fa-trash fa-lg"></i></button>
-          
-      </div>
+      
     </div>
 
     <div class="row mb-3">
@@ -116,7 +124,7 @@
 
 
 <!-- 
-  MODAL
+  ADD ACCOUNT MODAL
   =================================================================================
 -->
 
@@ -203,6 +211,95 @@
   </div>
 </div>
 
+
+
+<!-- 
+  EDIT ACCOUNT MODAL
+  =================================================================================
+-->
+
+<div class="modal fade" id="editAccountModal" tabindex="-1" aria-labelledby="editAccountLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editAccountLabel">Edit Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+  
+          <form id="frm_editaccount">{% csrf_token %}
+            <div class="errormsg"></div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Name:*</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="name">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">A/C no:*</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" name="ac_no"></textarea>
+              </div>
+            </div>
+  
+  
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Tel No.:</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="mobile">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">PAN:</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="pan" style="text-transform:uppercase">
+              </div>
+            </div>
+  
+  
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">IFSC:*</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="IFSC code" name="ifsc" id="txt_edit_ifsc">
+                  <button type="submit" class="btn btn-primary" id="btn_edit_ifsc">Get Bank</button>
+                  <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingEditIFSCDiv">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Loading...
+                    </button>
+                </div>
+              </div>
+              <div class="form-text">Please click <b>Get Bank</b> button to automatically fill <b>Bank</b> and <b>Branch</b>.</div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Bank:*</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="id_edit_bank" name="bank">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Branch:*</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="id_edit_branch" name="branch">
+              </div>
+            </div>
+  
+          <div id="bank_edit_details"></div>
+          </form>
+          
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btn_edit_account">Save A/c</button>
+          <button class="btn btn-primary" style="display: none;" type="button" disabled id="loadingEditAccountDiv">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Loading...
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- 
   Applicant MODAL
   =================================================================================
@@ -258,10 +355,17 @@
 <script>
 
   let ac_data = {{ accounts| safe}};
+
   function setTextboxes(data) {
     $("#txt_acno").val(data['account']);
     // $("#txt_telephone").val(data['account']);
-
+    $('#frm_editaccount input[name="name"]').val(data['text']);
+    $('#frm_editaccount textarea[name="ac_no"]').val(data['account']);
+    $('#frm_editaccount input[name="bank"]').val(data['bank']);
+    $('#frm_editaccount input[name="branch"]').val(data['branch']);
+    $('#frm_editaccount input[name="mobile"]').val(data['mobile']);
+    $('#frm_editaccount input[name="pan"]').val(data['pan']);
+    $('#frm_editaccount input[name="ifsc"]').val(data['ifsc']);
   }
 
   $('#sel_account').select2({ placeholder: 'Select account', data: ac_data });
@@ -275,6 +379,12 @@
         $("#bank_details").html('');
         
     });
+    $("#editAccountModal").on('show.bs.modal', function(event) {
+        $("#editAccountModal").find('.errormsg').html('');
+        $("#bank_edit_details").html('');
+        
+    });
+    
     $("#applicantModal").on('show.bs.modal', function(event) {
         $("#applicantModal").find('.errormsg').html('');
     });
@@ -310,6 +420,37 @@
     });
   });
 
+  $("#btn_edit_ifsc").click(function (e) {
+    e.preventDefault();
+    $("#btn_edit_ifsc").hide();
+    $('#loadingEditIFSCDiv').show();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'ajax_ifsc' %}",
+      data: { 'ifsc': $("#txt_edit_ifsc").val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'}
+    }).done(function (msg) { 
+        $("#btn_edit_ifsc").show();
+    $('#loadingEditIFSCDiv').hide();
+      if (msg['status'] == 'success'){
+        let resp = msg['data'];
+        // bank_details = `
+        //   <ul class="list-group">
+        //     <li class="list-group-item active" aria-current="true">${resp['bank']}</li>
+        //     <li class="list-group-item">Branch: ${resp['branch']}</li>
+        //     <li class="list-group-item">City: ${resp['city']}</li>
+        //   </ul>`;
+          $("#id_edit_bank").val(resp['bank']);
+          $("#id_edit_branch").val(resp['branch']);
+
+      } else  {
+        $("#bank_edit_details").html(`<div class="alert alert-danger" role="alert">
+            <strong> IFSC Code not found.</strong> Please check IFSC code again!
+          </div>`);
+      }
+      // $("#bank_details").html(bank_details); 
+    });
+  });
+
   $("#btn_add_account").click(function (e) {
     e.preventDefault();
     let addperiod = $('#exampleModal');
@@ -336,6 +477,47 @@
         $("#bank_details").html(); 
       } else {
         addperiod.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
+      }
+
+    });
+  });
+  $("#btn_edit_ac").click(function (e) {
+    let ac_id = $("#sel_account").val();
+    if (ac_id) {
+      $("#editAccountModal").modal('show');
+    } else {
+      alert('Please select an account.')
+    }
+  });
+  $("#btn_edit_account").click(function (e) {
+    e.preventDefault();
+    let ac_id = $("#sel_account").val();
+    let editAccount = $('#editAccountModal');
+    let datas = $('#frm_editaccount').serializeArray();
+
+    // loading spinner
+    $("#btn_edit_account").hide();
+    $('#loadingAccountEditDiv').show();
+    $.ajax({
+      type: "POST",
+      url: `/otherbankaccount/${ac_id}/`,
+      beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
+        },
+      data: datas
+    }).done(function (resp) {
+        $("#btn_edit_account").show();
+        $('#loadingAccountEditDiv').hide();
+      if (resp['status'] == 'success') {
+        // refresh 
+        location.reload();
+
+        // editAccount.modal('hide');
+        // let newdata = resp['data'];
+        // refresh select2
+        
+      } else {
+        editAccount.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
       }
 
     });
