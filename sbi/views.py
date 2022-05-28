@@ -200,7 +200,18 @@ class OtherbankAccountView(View):
             item = form.save(commit=False)
             item.user = request.user
             item.save()
-            message = {'status':'success', 'data':{'id':item.id,'text':item.name,'account':item.ac_no}}
+            message = {'status':'success', 
+                'data':{
+                     'id': item.id,
+                    'text': item.name,
+                    'account':item.ac_no,
+                    'bank': item.bank,
+                    'branch':item.branch,
+                    'mobile':item.mobile,
+                    'pan':item.pan,
+                    'ifsc':item.ifsc,
+                }
+            }
         else:
             message = {'status':'failed', 'data':str(form.errors)}
         return JsonResponse(message)

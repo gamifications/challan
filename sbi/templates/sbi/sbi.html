@@ -494,8 +494,7 @@
         },
       data: datas
     }).done(function (resp) {
-        $("#btn_edit_account").show();
-        $('#loadingAccountEditDiv').hide();
+        
       if (resp['status'] == 'success') {
         // refresh 
         location.reload();
@@ -505,6 +504,8 @@
         // refresh select2
         
       } else {
+        $("#btn_edit_account").show();
+        $('#loadingAccountEditDiv').hide();
         editAccount.find('.errormsg').html('<div class="alert alert-danger">' + resp['data'] + '</div>');
       }
 
